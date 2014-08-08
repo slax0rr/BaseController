@@ -104,7 +104,7 @@ class BaseController extends \CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->_VH = \SlaxWeb\ViewLoader\Loader($this);
+        $this->_VH = new \SlaxWeb\ViewLoader\Loader($this);
     }
 
     /**
