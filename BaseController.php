@@ -140,7 +140,9 @@ class BaseController extends \CI_Controller
 
         // If view is not set, try to load the default view for the method
         if ($this->view === "") {
-            $this->view = strtolower("{$this->router->fetch_class()}/{$this->router->fetch_method()}/main");
+            $this->view = strtolower(
+                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->router->fetch_method()}/main"
+            );
         }
 
         // Are header and footer set? And are they to be included?
