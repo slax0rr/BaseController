@@ -90,7 +90,7 @@ class BaseController extends \CI_Controller
      *
      * @var \SlaxWeb\ViewLoader\Loader
      */
-    protected $_VH = null;
+    protected $_viewLoader = null;
 
     /**
      * Initiate the view loader class
@@ -98,7 +98,7 @@ class BaseController extends \CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->_VH = new \SlaxWeb\ViewLoader\Loader($this);
+        $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
     }
 
     /**
@@ -141,8 +141,8 @@ class BaseController extends \CI_Controller
 
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
-            $this->_VH->setHeaderView($this->head);
-            $this->_VH->setFooterView($this->foot);
+            $this->_viewLoader->setHeaderView($this->head);
+            $this->_viewLoader->setFooterView($this->foot);
         }
 
         // Load language
@@ -157,26 +157,23 @@ class BaseController extends \CI_Controller
                 $this->langPrefix = $this->router->fetch_class() . "_";
             }
 
-            // check if language file exists
-            if (file_exists(APPPATH . "languages/{$this->language}/{$this->langFile}_lang.php") === true) {
-                $this->lang->load($this->langFile, $this->language);
-                $this->_VH->setLanguageStrings($this->langPrefix);
-            }
+            $this->lang->load($this->langFile, $this->language);
+            $this->_viewLoader->setLanguageStrings($this->langPrefix);
         }
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
             foreach ($this->subViews as $name => $view) {
                 if (is_array($view) === true) {
-                    $this->viewData["subview_{$name}"] = $this->_VH->loadView($view, $this->viewData, false, true);
+                    $this->viewData["subview_{$name}"] = $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
                 } else {
-                    $this->viewData["subview_{$name}"] = $this->_VH->loadView($view["view"], $view["data"], false, true);
+                    $this->viewData["subview_{$name}"] = $this->_viewLoader->loadView($view, $this->viewData, false, true);
                 }
             }
         }
 
         // We have everything, now just load the view
-        $this->_VH->loadView($this->view, $this->viewData);
+        $this->_viewLoader->loadView($this->view, $this->viewData);
         return true;
     }
 }
