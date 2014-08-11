@@ -11,15 +11,9 @@ namespace SlaxWeb\BaseController;
 class BaseController extends \CI_Controller
 {
     /**
-     * Auto load the views
-     *
-     * @var bool
-     */
-    public $load = true;
-    /**
      * View name
      *
-     * If left empty it will load the view: "controller/method/main"
+     * If left empty it will load the view: "controller/method/main", set to false to disable loading
      *
      * @var string
      */
@@ -134,7 +128,7 @@ class BaseController extends \CI_Controller
     protected function _loadViews()
     {
         // should we load the views?
-        if ($this->load === false) {
+        if ($this->view === false) {
             return true;
         }
 
