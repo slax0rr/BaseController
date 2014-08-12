@@ -24,7 +24,7 @@ require_once "vendor/autoload.php";
 Congratulations, BaseController is installed.
 
 View loading and data
-------------
+=====================
 
 Example
 -------
