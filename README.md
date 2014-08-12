@@ -16,7 +16,7 @@ Simply create composer.json file in your project root:
 }
 ```
 
-Then run ''composer.phar install''. When finished, edit CodeIgniter index.php file and add this line right after PHP openning tag:
+Then run **composer.phar install**. When finished, edit CodeIgniter index.php file and add this line right after PHP openning tag:
 ```PHP
 require_once "vendor/autoload.php";
 ```
@@ -65,14 +65,14 @@ class Contrlr extends \SlaxWeb\BaseController\BaseController
 Basic usage
 -----------
 
-To start using, all your controllers must extend ''\SlaxWeb\BaseController\BaseController'' instead of CI_Controller. If you are already extending MY_Controller, then extend ''\SlaxWeb\BaseController\BaseController'' in MY_Controller.
+To start using, all your controllers must extend **\SlaxWeb\BaseController\BaseController** instead of CI_Controller. If you are already extending MY_Controller, then extend **\SlaxWeb\BaseController\BaseController** in MY_Controller.
 
-And this is it, after a controller method is done executing, BaseController will automatically load the view file associated with this controller method. The default view being loaded is: '''application/views/(controllerdir)/controllername/controllermethod/main'''.
+And this is it, after a controller method is done executing, BaseController will automatically load the view file associated with this controller method. The default view being loaded is: *application/views/(controllerdir)/controllername/controllermethod/main*.
 
 Disable view loading
 --------------------
 
-Some controller methods do not load views, in this case set BaseController property ''view'' to false:
+Some controller methods do not load views, in this case set BaseController property **view** to false:
 ```PHP
 $this->view = false
 ```
@@ -80,7 +80,7 @@ $this->view = false
 Change view file
 ----------------
 
-Want to load a different view file and not the default one? No problem, just set the desired view file to ''view'' property.
+Want to load a different view file and not the default one? No problem, just set the desired view file to **view** property.
 ```PHP
 $this->view = "desired/view";
 ```
@@ -88,7 +88,7 @@ $this->view = "desired/view";
 Load sub-views
 --------------
 
-If you need to load subviews into your main view, you can do so, by assigning an array to the BaseController ''subViews'' property. The key name in the array is later used as the var in the main view, and the value in the array is the sub-view file name. Controller code:
+If you need to load subviews into your main view, you can do so, by assigning an array to the BaseController **subViews** property. The key name in the array is later used as the var in the main view, and the value in the array is the sub-view file name. Controller code:
 ```PHP
 $this->subViews = array("name" => "subview/file");
 ```
@@ -109,7 +109,7 @@ $this->viewData = array("name" => "value");
 Languages
 =========
 
-BaseController also autoloads language files and loads properly prefixed language strings into the view data before loading the view. Language filename must have the same name as the controller, and all language strings that will be injected into the view data, need to have '''methodname_''' prefix in the language string key.
+BaseController also autoloads language files and loads properly prefixed language strings into the view data before loading the view. Language filename must have the same name as the controller, and all language strings that will be injected into the view data, need to have *methodname_* prefix in the language string key.
 
 Example
 -------
@@ -147,7 +147,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
 Basic usage
 -----------
 
-By default, base controller will auto-load the language file that has the same name as the controller name, from the default language directory. By default that is english, changable in CodeIgniter config. By default it will load all language strings which have the '''methodname_''' as the prefix in the language string key name
+By default, base controller will auto-load the language file that has the same name as the controller name, from the default language directory. By default that is english, changable in CodeIgniter config. By default it will load all language strings which have the *methodname_* as the prefix in the language string key name
 ```PHP
 class Contrlr \SlaxWeb\BaseController\BaseController
 {
@@ -157,13 +157,13 @@ class Contrlr \SlaxWeb\BaseController\BaseController
 }
 ```
 
-Above will try to autoload ''application/language/english/Contrlr_lang.php'' and inject translated strings.
+Above will try to autoload **application/language/english/Contrlr_lang.php** and inject translated strings.
 ```PHP
 $lang["defaultLang_var1"] = "string";
 $lang["defaultLang_var2"] = "string";
 $lang["defaultLang_var3"] = "string";
 ```
 
-In the view, vars ''$var1'', ''$var2'', and ''$var3'', will be available.
+In the view, vars **$var1**, **$var2**, and **$var3**, will be available.
 
 ... TO BE CONTINUED ...
