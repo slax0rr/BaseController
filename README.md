@@ -16,7 +16,7 @@ Simply create composer.json file in your project root:
 }
 ```
 
-Then run **composer.phar install**. When finished, edit CodeIgniter index.php file and add this line right after PHP openning tag:
+Then run **composer.phar install**. When finished, edit CodeIgniter index.php file and add this line right after PHP opening tag:
 ```PHP
 require_once "vendor/autoload.php";
 ```
@@ -147,7 +147,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
 Basic usage
 -----------
 
-By default, base controller will auto-load the language file that has the same name as the controller name, from the default language directory. By default that is english, changable in CodeIgniter config. By default it will load all language strings which have the *methodname_* as the prefix in the language string key name
+By default, base controller will auto-load the language file that has the same name as the controller name, from the default language directory. By default that is english, changeable in CodeIgniter config. By default it will load all language strings which have the *methodname_* as the prefix in the language string key name.
 ```PHP
 class Contrlr \SlaxWeb\BaseController\BaseController
 {
