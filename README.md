@@ -101,7 +101,7 @@ Main view:
 View data
 ---------
 
-To load data into view, simply assign it to the ''viewData'' property array.
+To load data into view, simply assign it to the **viewData** property array.
 ```PHP
 $this->viewData = array("name" => "value");
 ```
