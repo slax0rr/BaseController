@@ -246,7 +246,7 @@ BasicController also allows you to manually load any view file you want. Because
 ChangeLog
 ---------
 
-0.1.0
-=====
+0.1.0.0
+=======
 
 Initial version
