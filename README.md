@@ -130,7 +130,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
   
   public function diffLangFile()
   {
-    $this->langFile = "Diffrent_lang";
+    $this->langFile = "Diffrent";
   }
   
   public function diffPrefix()
@@ -166,4 +166,87 @@ $lang["defaultLang_var3"] = "string";
 
 In the view, vars **$var1**, **$var2**, and **$var3**, will be available.
 
-... TO BE CONTINUED ...
+No language file
+================
+
+To disable loading of languages, simply disable it by setting property **includeLang** to false.
+```PHP
+$this->includeLang = false;
+```
+
+Language file
+=============
+
+In order to load a different language file, set the **langFile** property.
+```PHP
+$this->langFile = "Different";
+```
+
+Language prefix
+===============
+To change the prefix from the default method name, set the **langPrefix** property.
+```PHP
+$this->langPrefix = "langprefix_";
+```
+
+Non-Default language
+====================
+If you want to load a non-default language, you have to set it with the **language** property.
+```PHP
+$this->language = "german";
+```
+
+Templates
+---------
+
+Base controller also supports basic templating. At the moment only by setting a header and footer view.
+
+Example
+=======
+
+```PHP
+class Contrlr extends \SlaxWeb\BaseController\BaseController
+{
+  public function template()
+  {
+    $this->head = "head/view";
+    $this->foot = "foot/view";
+  }
+  
+  public function noTemplate()
+  {
+    // if a template is already loaded, you can disable it
+    $this->include = false;
+  }
+}
+```
+
+Setting template files
+======================
+
+In order to set the header and/or footer files, properties **head**, and **foot** must be set. Then the header view will be loaded before the controller view(s), and the footer will come after.
+```PHP
+$this->head = "head/view";
+$this->foot = "foot/view";
+```
+
+Disable template
+================
+
+If you have set the template files, but would not like to display the header and footer views, you need to set the **include** property to false.
+```PHP
+$this->include = false;
+```
+
+Manual view loading
+-------------------
+
+BasicController also allows you to manually load any view file you want. Because BaseController is using the [ViewLoader](https://github.com/slax0rr/ViewLoader), you can access it through the protected **_viewLoader** property. For help with using the ViewLoader, please read the readme [here](https://github.com/slax0rr/ViewLoader/blob/develop/README.md).
+
+ChangeLog
+---------
+
+0.1.0
+=====
+
+Initial version
