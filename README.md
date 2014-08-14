@@ -219,6 +219,10 @@ In order to load a different language file, set the **langFile** property.
 ```PHP
 $this->langFile = "Different";
 ```
+If you wish to load multiple language files, set an array with those language file names to the **langFile** property.
+```PHP
+$this->langFile = array("Lang1", "Lang2", "Lang3");
+```
 
 Language prefix
 ---------------
@@ -284,16 +288,23 @@ BasicController also allows you to manually load any view file you want. Because
 ChangeLog
 =========
 
+0.1.0.3
+------
+
+* Multiple language files
+
 0.1.0.2
 -------
-Cast view path to lower-case before trying to load the guessed view file
-Include controller sub-dir in guessed view file
+
+* Cast view path to lower-case before trying to load the guessed view file
+* Include controller sub-dir in guessed view file
 
 0.1.0.1
 -------
-Do not check if a view file exists, but let CodeIgniter handle this.
+
+* Do not check if a view file exists, but let CodeIgniter handle this.
 
 0.1.0.0
 -------
 
-Initial version
+* Initial version
