@@ -63,9 +63,10 @@ class BaseController extends \CI_Controller
     /**
      * Language file
      *
-     * Use controller name as language file if not set
+     * Use controller name as language file if not set. Can be set with either one language file in a string
+     * or multiple files in an array.
      *
-     * @var string
+     * @var mixed
      */
     public $langFile = "";
     /**
@@ -157,7 +158,13 @@ class BaseController extends \CI_Controller
                 $this->langPrefix = $this->router->fetch_class() . "_";
             }
 
-            $this->lang->load($this->langFile, $this->language);
+            if (is_string($this->langFile) === true) {
+                $this->lang->load($this->langFile, $this->language);
+            } elseif (is_array($this->langFile) === true) {
+                foreach ($this->langFile as $lang) {
+                    $this->lang->load($lang, $this->language);
+                }
+            }
             $this->_viewLoader->setLanguageStrings($this->langPrefix);
         }
 
