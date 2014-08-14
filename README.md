@@ -21,6 +21,7 @@ Table of contents
   * [Change view file](https://github.com/slax0rr/BaseController/blob/develop/README.md#change-view-file)
   * [Load sub-views](https://github.com/slax0rr/BaseController/blob/develop/README.md#load-sub-views)
   * [View data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-data)
+  * [Controller 404 page](https://github.com/slax0rr/BaseController/blob/develop/README.md#controller-404-page)
 * [Languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#languages)
   * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-1)
   * [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage-1)
@@ -137,6 +138,11 @@ To load data into view, simply assign it to the **viewData** property array.
 ```PHP
 $this->viewData = array("name" => "value");
 ```
+
+Controller 404 page
+-------------------
+
+If a controller method is not found, the Basecontroller will search in the routed-to controller a *_404* method and call it, so you can have custom 404 pages per controller. If it is not found, it will call the CodeIgniters *show_404* method, and the CodeIgniter 404 page will be displayed as per normal operation.
 
 Languages
 =========
