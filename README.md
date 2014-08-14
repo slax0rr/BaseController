@@ -276,6 +276,15 @@ BasicController also allows you to manually load any view file you want. Because
 ChangeLog
 =========
 
+0.1.0.2
+-------
+Cast view path to lower-case before trying to load the guessed view file
+Include controller sub-dir in guessed view file
+
+0.1.0.1
+-------
+Do not check if a view file exists, but let CodeIgniter handle this.
+
 0.1.0.0
 -------
 
