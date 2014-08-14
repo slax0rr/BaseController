@@ -3,8 +3,38 @@ BaseController
 
 Base controller for CodeIgniter, helps you with loading views, subviews, and populating them with data and loading of language as well as injecting said languages into the view data.
 
+The idea for the BaseController came from Jamie Rumbelows [base controller](https://github.com/jamierumbelow/codeigniter-base-controller), with some aditions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
+
+If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
+
+Table of contents
+=================
+[BaseController](https://github.com/slax0rr/BaseController/blob/develop/README.md#basecontroller)
+[Table of contents](https://github.com/slax0rr/BaseController/blob/develop/README.md#table-of-contents)
+[Install](https://github.com/slax0rr/BaseController/blob/develop/README.md#install)
+[View loading and data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-loading-and-data)
+  [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example)
+  [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage)
+  [Disable view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-view-loading)
+  [Change view file](https://github.com/slax0rr/BaseController/blob/develop/README.md#change-view-file)
+  [Load sub-views](https://github.com/slax0rr/BaseController/blob/develop/README.md#load-sub-views)
+  [View data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-data)
+[Languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#languages)
+  [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-1)
+  [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage-1)
+  [No languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#no-languages)
+  [Language file](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-file)
+  [Language prefix](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-prefix)
+  [Non-Default language](https://github.com/slax0rr/BaseController/blob/develop/README.md#non-default-language)
+[Templates](https://github.com/slax0rr/BaseController/blob/develop/README.md#templates)
+  [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-2)
+  [Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#setting-template-files)
+  [Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-template)
+[Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
+[ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
+
 Install
--------
+=======
 
 The easiest way to install at the moment is to use [composer](https://getcomposer.org/).
 Simply create composer.json file in your project root:
@@ -166,8 +196,8 @@ $lang["defaultLang_var3"] = "string";
 
 In the view, vars **$var1**, **$var2**, and **$var3**, will be available.
 
-No language file
-----------------
+No languages
+------------
 
 To disable loading of languages, simply disable it by setting property **includeLang** to false.
 ```PHP
