@@ -87,6 +87,12 @@ class BaseController extends \CI_Controller
      */
     public $langPrefix = "";
     /**
+     * Controller method
+     *
+     * @var string
+     */
+    protected $_method = "";
+    /**
      * View Loader object
      *
      * @var \SlaxWeb\ViewLoader\Loader
@@ -112,10 +118,13 @@ class BaseController extends \CI_Controller
     public function _remap($method, $params = array())
     {
         if (method_exists($this, $method)) {
+            $this->_method = $this->router->fetch_method();
             call_user_func_array(array($this, $method), $params);
             $this->_loadViews();
         } elseif (method_exists($this, "_404")) {
+            $this->_method = "_404";
             call_user_func(array($this, "_404"));
+            $this->_loadViews();
         } else {
             show_404();
         }
@@ -136,7 +145,7 @@ class BaseController extends \CI_Controller
         // If view is not set, try to load the default view for the method
         if ($this->view === "") {
             $this->view = strtolower(
-                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->router->fetch_method()}/main"
+                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
             );
         }
 
