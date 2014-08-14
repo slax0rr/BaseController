@@ -11,15 +11,9 @@ namespace SlaxWeb\BaseController;
 class BaseController extends \CI_Controller
 {
     /**
-     * Auto load the views
-     *
-     * @var bool
-     */
-    public $load = true;
-    /**
      * View name
      *
-     * If left empty it will load the view: "Controller/Method/Main"
+     * If left empty it will load the view: "controller/method/main", set to false to disable loading
      *
      * @var string
      */
@@ -69,9 +63,10 @@ class BaseController extends \CI_Controller
     /**
      * Language file
      *
-     * Use controller name as language file if not set
+     * Use controller name as language file if not set. Can be set with either one language file in a string
+     * or multiple files in an array.
      *
-     * @var string
+     * @var mixed
      */
     public $langFile = "";
     /**
@@ -92,11 +87,17 @@ class BaseController extends \CI_Controller
      */
     public $langPrefix = "";
     /**
+     * Controller method
+     *
+     * @var string
+     */
+    protected $_method = "";
+    /**
      * View Loader object
      *
      * @var \SlaxWeb\ViewLoader\Loader
      */
-    protected $_VH = null;
+    protected $_viewLoader = null;
 
     /**
      * Initiate the view loader class
@@ -104,7 +105,7 @@ class BaseController extends \CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->_VH = new \SlaxWeb\ViewLoader\Loader($this);
+        $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
     }
 
     /**
@@ -117,10 +118,13 @@ class BaseController extends \CI_Controller
     public function _remap($method, $params = array())
     {
         if (method_exists($this, $method)) {
+            $this->_method = $this->router->fetch_method();
             call_user_func_array(array($this, $method), $params);
             $this->_loadViews();
         } elseif (method_exists($this, "_404")) {
+            $this->_method = "_404";
             call_user_func(array($this, "_404"));
+            $this->_loadViews();
         } else {
             show_404();
         }
@@ -134,19 +138,21 @@ class BaseController extends \CI_Controller
     protected function _loadViews()
     {
         // should we load the views?
-        if ($this->load === false) {
+        if ($this->view === false) {
             return true;
         }
 
         // If view is not set, try to load the default view for the method
         if ($this->view === "") {
-            $this->view = "{$this->router->fetch_class()}/{$this->router->fetch_method()}/Main";
+            $this->view = strtolower(
+                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
+            );
         }
 
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
-            $this->_VH->setHeaderView($this->head);
-            $this->_VH->setFooterView($this->foot);
+            $this->_viewLoader->setHeaderView($this->head);
+            $this->_viewLoader->setFooterView($this->foot);
         }
 
         // Load language
@@ -158,29 +164,34 @@ class BaseController extends \CI_Controller
 
             // Use controller name as prefix if not set
             if ($this->langPrefix === "") {
-                $this->langPrefix = $this->router->fetch_class() . "_";
+                $this->langPrefix = strtolower($this->_method) . "_";
             }
 
-            // check if language file exists
-            if (file_exists(APPPATH . "languages/{$this->language}/{$this->langFile}_lang.php") === true) {
+            if (is_string($this->langFile) === true) {
                 $this->lang->load($this->langFile, $this->language);
-                $this->_VH->setLanguageStrings($this->langPrefix);
+            } elseif (is_array($this->langFile) === true) {
+                foreach ($this->langFile as $lang) {
+                    $this->lang->load($lang, $this->language);
+                }
             }
+            $this->_viewLoader->setLanguageStrings($this->langPrefix);
         }
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
             foreach ($this->subViews as $name => $view) {
                 if (is_array($view) === true) {
-                    $this->viewData["subview_{$name}"] = $this->_VH->loadView($view, $this->viewData, false, true);
+                    $this->viewData["subview_{$name}"] =
+                        $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
                 } else {
-                    $this->viewData["subview_{$name}"] = $this->_VH->loadView($view["view"], $view["data"], false, true);
+                    $this->viewData["subview_{$name}"] =
+                        $this->_viewLoader->loadView($view, $this->viewData, false, true);
                 }
             }
         }
 
         // We have everything, now just load the view
-        $this->_VH->loadView($this->view, $this->viewData);
+        $this->_viewLoader->loadView($this->view, $this->viewData);
         return true;
     }
 }
