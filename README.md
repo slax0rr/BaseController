@@ -3,11 +3,11 @@ BaseController
 
 Base controller for CodeIgniter, helps you with loading views, subviews, and populating them with data and loading of language as well as injecting said languages into the view data.
 
-The idea for the BaseController came from Jamie Rumbelows [base controller](https://github.com/jamierumbelow/codeigniter-base-controller), with some aditions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
+The idea for the BaseController came from Jamie Rumbelows [base controller](https://github.com/jamierumbelow/codeigniter-base-controller), with some additions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
 
-This is still in development phase, but is available for public as early-alpha, please use with caution, I can not guarantee that something will not change along the way.
+This is still in development phase, but is available for public as early-alpha. Please use with caution, I can not guarantee that something will not change along the way.
 
 Table of contents
 =================
@@ -105,7 +105,7 @@ And this is it, after a controller method is done executing, BaseController will
 Disable view loading
 --------------------
 
-Some controller methods do not load views, in this case set BaseController property **view** to false:
+Some controller methods do not load views. In this case set BaseController property **view** to false:
 ```PHP
 $this->view = false
 ```
