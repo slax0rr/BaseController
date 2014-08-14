@@ -164,7 +164,7 @@ class BaseController extends \CI_Controller
 
             // Use controller name as prefix if not set
             if ($this->langPrefix === "") {
-                $this->langPrefix = $this->router->fetch_class() . "_";
+                $this->langPrefix = strtolower($this->_method) . "_";
             }
 
             if (is_string($this->langFile) === true) {
