@@ -7,7 +7,7 @@ The idea for the BaseController came from Jamie Rumbelows [base controller](http
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
 
-This is still in development phase, but is available for public as early-alpha. Please use with caution, I can not guarantee that something will not change along the way.
+This is still in development phase, but is available for public as early-beta. Please use with caution, I can not guarantee that something will not change along the way.
 
 Table of contents
 =================
@@ -287,6 +287,11 @@ BasicController also allows you to manually load any view file you want. Because
 
 ChangeLog
 =========
+
+0.1.1.0
+-------
+
+* First beta release
 
 0.1.0.3
 ------

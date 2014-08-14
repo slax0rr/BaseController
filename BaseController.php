@@ -181,9 +181,11 @@ class BaseController extends \CI_Controller
         if (empty($this->subViews) === false) {
             foreach ($this->subViews as $name => $view) {
                 if (is_array($view) === true) {
-                    $this->viewData["subview_{$name}"] = $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
+                    $this->viewData["subview_{$name}"] =
+                        $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
                 } else {
-                    $this->viewData["subview_{$name}"] = $this->_viewLoader->loadView($view, $this->viewData, false, true);
+                    $this->viewData["subview_{$name}"] =
+                        $this->_viewLoader->loadView($view, $this->viewData, false, true);
                 }
             }
         }
