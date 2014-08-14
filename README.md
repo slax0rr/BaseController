@@ -7,6 +7,8 @@ The idea for the BaseController came from Jamie Rumbelows [base controller](http
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
 
+This is still in development phase, but is available for public as early-alpha, please use with caution, I can not guarantee that something will change along the way.
+
 Table of contents
 =================
 * [BaseController](https://github.com/slax0rr/BaseController/blob/develop/README.md#basecontroller)
