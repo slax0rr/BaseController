@@ -44,7 +44,7 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basecontroller": "0.1.1.0"
+    "slaxweb/ci-basecontroller": "~0.1"
   }
 }
 ```
