@@ -164,7 +164,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
   
   public function noLang()
   {
-    $this->includeLang = false;
+    $this->langFile = false;
   }
   
   public function diffLangFile()
@@ -208,9 +208,10 @@ In the view, vars **$var1**, **$var2**, and **$var3**, will be available.
 No languages
 ------------
 
-To disable loading of languages, simply disable it by setting property **includeLang** to false.
+To disable loading of languages, simply disable it by setting property **langFile** to false.
+WARNING! Property used for disabling the language file loading in 0.1.* versions is **includeLang**!
 ```PHP
-$this->includeLang = false;
+$this->langFile = false;
 ```
 
 Language file
