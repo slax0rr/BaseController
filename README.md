@@ -303,7 +303,7 @@ Layout
 
 Instead of header/footer files, BaseController now provides layouts. The
 layout is the whole template and your controller view gets injected into
-this layout view through the **mainView** variable. You have three
+this layout view through the **mainView** variable. You have four
 options:
 * No layout (default), set BaseController **layout** property to false
 * Controller specific layout, set property **layout** to true,
