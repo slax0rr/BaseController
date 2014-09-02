@@ -32,7 +32,7 @@ Table of contents
 * [Templates](https://github.com/slax0rr/BaseController/blob/develop/README.md#templates)
   * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-2)
   * [DEPRECATED - Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated---setting-template-files)
-  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated--disable-template)
+  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated---disable-template)
   * [Layout](https://github.com/slax0rr/BaseController/blob/develop/README.md#layout)
 * [Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
 * [ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
