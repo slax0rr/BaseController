@@ -167,7 +167,7 @@ class BaseController extends \CI_Controller
         }
 
         // Load language
-        if ($this->includeFile == true) {
+        if ($this->langFile == true) {
             $this->_setLanguage();
         }
 
