@@ -37,6 +37,12 @@ class BaseController extends \CI_Controller
      */
     public $subViews = array();
     /**
+     * Include Header/Footer
+     *
+     * @var bool
+     */
+    public $include = true;
+    /**
      * Header View
      *
      * @var string
@@ -49,11 +55,16 @@ class BaseController extends \CI_Controller
      */
     public $foot = "";
     /**
-     * Include Header/Footer
+     * Layout
      *
-     * @var bool
+     * If set to false (default) the layout will not be used, if set to true,
+     * BaseController will try to guess the default layout file for current
+     * controller (layouts/ControllerDir/ControllerName/layout),
+     * or you can also set you layout file manually into this property.
+     *
+     * @var mixed
      */
-    public $include = true;
+    public $layout = false;
     /**
      * Include language in view data
      *
@@ -190,8 +201,25 @@ class BaseController extends \CI_Controller
             }
         }
 
-        // We have everything, now just load the view
-        $this->_viewLoader->loadView($this->view, $this->viewData);
+        // We have everything, now load the main view
+        $data["mainView"] = $this->_viewLoader->loadView($this->view, $this->viewData, true, true);
+
+        // If layout set to true, guess the default name of the layout
+        if (is_string($this->layout) === true) {
+            $this->layout = strtolower(
+                "layouts/{$this->router->fetch_directory()}{$this->router->fetch_class()}/layout"
+            );
+            if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
+                $this->layout = "layouts/default";
+            }
+        }
+        // If there is no layout, set everything loaded to this point to output
+        if ($this->layout === false) {
+            $this->output->set_output($data["mainView"]);
+        } else {
+            // Load the layout
+            $this->_viewLoader->loadView($this->layout, $data);
+        }
         return true;
     }
 }
