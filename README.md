@@ -31,8 +31,9 @@ Table of contents
   * [Non-Default language](https://github.com/slax0rr/BaseController/blob/develop/README.md#non-default-language)
 * [Templates](https://github.com/slax0rr/BaseController/blob/develop/README.md#templates)
   * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-2)
-  * [Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#setting-template-files)
-  * [Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-template)
+  * [DEPRECATED - Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated-setting-template-files)
+  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated-disable-template)
+  * [Layout](https://github.com/slax0rr/BaseController/blob/develop/README.md#layout)
 * [Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
 * [ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
 
@@ -249,22 +250,39 @@ Example
 ```PHP
 class Contrlr extends \SlaxWeb\BaseController\BaseController
 {
+  // DEPRECATED
   public function template()
   {
     $this->head = "head/view";
     $this->foot = "foot/view";
   }
   
+  // DEPRECATED
   public function noTemplate()
   {
     // if a template is already loaded, you can disable it
     $this->include = false;
   }
+
+  public function layout()
+  {
+    // to load a layout, set layout property to true
+    // base controller will try to load the controllers layout if not found
+    // it will load the application default layout
+    $this->layout = true;
+  }
+
+  public function specificLayout()
+  {
+    // if you want your method or whole controller to have a specific
+layout file you can set it to the layout property
+    $this->layout = "layout/view";
+  }
 }
 ```
 
-Setting template files
-----------------------
+DEPRECATED - Setting template files
+-----------------------------------
 
 In order to set the header and/or footer files, properties **head**, and **foot** must be set. Then the header view will be loaded before the controller view(s), and the footer will come after.
 ```PHP
@@ -272,12 +290,33 @@ $this->head = "head/view";
 $this->foot = "foot/view";
 ```
 
-Disable template
-----------------
+DEPRECATED - Disable template
+-----------------------------
 
 If you have set the template files, but would not like to display the header and footer views, you need to set the **include** property to false.
 ```PHP
 $this->include = false;
+```
+
+Layout
+------
+
+Instead of header/footer files, BaseController now provides layouts. The
+layout is the whole template and your controller view gets injected into
+this layout view through the **mainView** variable. You have three
+options:
+* No layout (default), set BaseController **layout** property to false
+* Controller specific layout, set property **layout** to true,
+  BaseController will try to load the default controller layout file from {views}/layouts/ControllerDir/ControllerName/layout
+* Application specific layout, set property **layout** to true, and make
+  sure controller specific layout view file does not exists
+* Custom layout, set the path to the layout view file to the **layout**
+  property
+```PHP
+// use controller or application specific layout
+$this->layout = true;
+// use custom layout
+$this->layout = 'layout/myLayout';
 ```
 
 Manual view loading
