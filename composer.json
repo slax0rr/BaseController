@@ -2,7 +2,7 @@
     "name": "slaxweb/ci-basecontroller",
     "description": "BaseController for CodeIgniter",
     "license": "GPLv3",
-    "version": "0.2.0-layout",
+    "version": "0.2.0",
     "authors": [
         {
             "name": "Tomaz Lovrec",
