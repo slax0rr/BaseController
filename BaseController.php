@@ -39,17 +39,23 @@ class BaseController extends \CI_Controller
     /**
      * Include Header/Footer
      *
+     * DEPRECATED!
+     *
      * @var bool
      */
     public $include = true;
     /**
      * Header View
      *
+     * DEPRECATED!
+     *
      * @var string
      */
     public $head = "";
     /**
      * Footer View
+     *
+     * DEPRECATED!
      *
      * @var string
      */
@@ -155,50 +161,25 @@ class BaseController extends \CI_Controller
 
         // If view is not set, try to load the default view for the method
         if ($this->view === "") {
-            $this->view = strtolower(
-                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
-            );
+            $this->_setView();
         }
 
+        /**
+         * DEPRECATED
+         */
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
-            $this->_viewLoader->setHeaderView($this->head);
-            $this->_viewLoader->setFooterView($this->foot);
+            $this->_setTemplate();
         }
 
         // Load language
         if ($this->includeLang === true) {
-            // try to use controller name as language file name
-            if ($this->langFile === "") {
-                $this->langFile = $this->router->fetch_class();
-            }
-
-            // Use controller name as prefix if not set
-            if ($this->langPrefix === "") {
-                $this->langPrefix = strtolower($this->_method) . "_";
-            }
-
-            if (is_string($this->langFile) === true) {
-                $this->lang->load($this->langFile, $this->language);
-            } elseif (is_array($this->langFile) === true) {
-                foreach ($this->langFile as $lang) {
-                    $this->lang->load($lang, $this->language);
-                }
-            }
-            $this->_viewLoader->setLanguageStrings($this->langPrefix);
+            $this->_setLanguage();
         }
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
-            foreach ($this->subViews as $name => $view) {
-                if (is_array($view) === true) {
-                    $this->viewData["subview_{$name}"] =
-                        $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
-                } else {
-                    $this->viewData["subview_{$name}"] =
-                        $this->_viewLoader->loadView($view, $this->viewData, false, true);
-                }
-            }
+            $this->_setSubviews();
         }
 
         // We have everything, now load the main view
@@ -206,13 +187,9 @@ class BaseController extends \CI_Controller
 
         // If layout set to true, guess the default name of the layout
         if (is_string($this->layout) === true) {
-            $this->layout = strtolower(
-                "layouts/{$this->router->fetch_directory()}{$this->router->fetch_class()}/layout"
-            );
-            if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
-                $this->layout = "layouts/default";
-            }
+            $this->_setLayout();
         }
+
         // If there is no layout, set everything loaded to this point to output
         if ($this->layout === false) {
             $this->output->set_output($data["mainView"]);
@@ -221,5 +198,87 @@ class BaseController extends \CI_Controller
             $this->_viewLoader->loadView($this->layout, $data);
         }
         return true;
+    }
+
+    /**
+     * Set the view
+     */
+    protected function _setView()
+    {
+        $this->view = strtolower(
+            "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
+        );
+    }
+
+    /**
+     * Set the header and footer views
+     *
+     * !DEPRECATED!
+     */
+    protected function _setTemplate()
+    {
+        $this->_viewLoader->setHeaderView($this->head);
+        $this->_viewLoader->setFooterView($this->foot);
+    }
+
+    /**
+     * Set language strings
+     *
+     * Load the language file, and inject language strings with specific prefixes
+     * in their keys.
+     */
+    protected function _setLanguage()
+    {
+        // try to use controller name as language file name
+        if ($this->langFile === "") {
+            $this->langFile = $this->router->fetch_class();
+        }
+
+        // Use controller name as prefix if not set
+        if ($this->langPrefix === "") {
+            $this->langPrefix = strtolower($this->_method) . "_";
+        }
+
+        if (is_string($this->langFile) === true) {
+            $this->lang->load($this->langFile, $this->language);
+        } elseif (is_array($this->langFile) === true) {
+            foreach ($this->langFile as $lang) {
+                $this->lang->load($lang, $this->language);
+            }
+        }
+        $this->_viewLoader->setLanguageStrings($this->langPrefix);
+    }
+
+    /**
+     * Load the subviews
+     *
+     * Load them away and add them to view data
+     */
+    protected function _setSubviews()
+    {
+        foreach ($this->subViews as $name => $view) {
+            if (is_array($view) === true) {
+                $this->viewData["subview_{$name}"] =
+                    $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
+            } else {
+                $this->viewData["subview_{$name}"] =
+                    $this->_viewLoader->loadView($view, $this->viewData, false, true);
+            }
+        }
+    }
+
+    /**
+     * Set the layout
+     *
+     * Try to obtain the layout, if not exists, set up the default one
+     */
+    protected function _setLayout()
+    {
+        $this->layout = strtolower(
+            "layouts/{$this->router->fetch_directory()}{$this->router->fetch_class()}/layout"
+        );
+        if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
+            $this->layout = "layouts/default";
+        }
     }
 }
