@@ -186,7 +186,7 @@ class BaseController extends \CI_Controller
         $data["mainView"] = $this->_viewLoader->loadView($this->view, $this->viewData, true, true);
 
         // If layout set to true, guess the default name of the layout
-        if (is_string($this->layout) === true) {
+        if ($this->layout === true) {
             $this->_setLayout();
         }
 
