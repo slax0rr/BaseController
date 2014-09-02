@@ -72,20 +72,14 @@ class BaseController extends \CI_Controller
      */
     public $layout = false;
     /**
-     * Include language in view data
-     *
-     * @var bool
-     */
-    public $includeLang = true;
-    /**
      * Language file
      *
      * Use controller name as language file if not set. Can be set with either one language file in a string
-     * or multiple files in an array.
+     * or multiple files in an array. If set to false, no language file gets loaded.
      *
      * @var mixed
      */
-    public $langFile = "";
+    public $langFile = true;
     /**
      * Language
      *
@@ -173,7 +167,7 @@ class BaseController extends \CI_Controller
         }
 
         // Load language
-        if ($this->includeLang === true) {
+        if ($this->includeFile == true) {
             $this->_setLanguage();
         }
 
@@ -230,7 +224,7 @@ class BaseController extends \CI_Controller
     protected function _setLanguage()
     {
         // try to use controller name as language file name
-        if ($this->langFile === "") {
+        if ($this->langFile === true) {
             $this->langFile = $this->router->fetch_class();
         }
 
