@@ -2,7 +2,7 @@
     "name": "slaxweb/ci-basecontroller",
     "description": "BaseController for CodeIgniter",
     "license": "GPLv3",
-    "version": "0.2.0.0",
+    "version": "0.2.0",
     "authors": [
         {
             "name": "Tomaz Lovrec",
@@ -20,7 +20,8 @@
 	},
 	"extra":	{
 		"branch-alias": {
-			"dev-develop": "0.2.0.x-dev"
+			"dev-develop": "0.2.x-dev"
+            "dev-feature/layouts": "0.2-layouts"
 		}
 	},
     "target-dir": "SlaxWeb/BaseController"
