@@ -327,6 +327,12 @@ BasicController also allows you to manually load any view file you want. Because
 ChangeLog
 =========
 
+0.2.0 - develop
+---------------
+
+* Switch version numbers
+* Add layout support
+
 0.1.1.0
 -------
 
