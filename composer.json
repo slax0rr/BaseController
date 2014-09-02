@@ -21,7 +21,7 @@
 	"extra":	{
 		"branch-alias": {
 			"dev-develop": "0.2.x-dev",
-            "dev-feature/layouts": "0.2-layouts"
+            "dev-feature/layouts": "0.2-layouts-dev"
 		}
 	},
     "target-dir": "SlaxWeb/BaseController"
