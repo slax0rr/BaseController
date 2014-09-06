@@ -137,6 +137,7 @@ class BaseController extends \CI_Controller
      */
     public function _remap($method, $params = array())
     {
+        $method .= ($this->input->server("REQUEST_METHOD") === "POST") ? "_post" : "";
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
             call_user_func_array(array($this, $method), $params);
