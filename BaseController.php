@@ -159,13 +159,13 @@ class BaseController extends \CI_Controller
      */
     protected function _loadModels()
     {
-        if (isset($this->models) && $this->models !== false) {
-            $model = "{$this->router->fetch_class()}_model";
+        if (isset($this->models) === false || $this->models !== false) {
+            $model = ucfirst("{$this->router->fetch_class()}_model");
             if (file_exists(APPPATH . "models/{$model}.php")) {
                 $this->load->model($model, $this->router->fetch_class());
             }
 
-            if (is_array($this->models)) {
+            if (isset($this->models) === true && is_array($this->models)) {
                 foreach ($this->models as $m) {
                     $this->load->model("{$m}_model", $m);
                 }
