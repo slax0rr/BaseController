@@ -125,6 +125,7 @@ class BaseController extends \CI_Controller
     {
         parent::__construct();
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
+        $this->_loadModels();
     }
 
     /**
@@ -146,6 +147,28 @@ class BaseController extends \CI_Controller
             $this->_loadViews();
         } else {
             show_404();
+        }
+    }
+
+    /**
+     * Autoload model
+     *
+     * Try to load the guessed model, if allowed. If property "models" is an array
+     * try to load those models as well.
+     */
+    protected function _loadModels()
+    {
+        if (isset($this->models) && $this->models !== false) {
+            $model = "{$this->router->fetch_class()}_model";
+            if (file_exists(APPPATH . "models/{$model}.php")) {
+                $this->load->model($model, $this->router->fetch_class());
+            }
+
+            if (is_array($this->models)) {
+                foreach ($this->models as $m) {
+                    $this->load->model("{$m}_model", $m);
+                }
+            }
         }
     }
 
