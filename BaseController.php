@@ -137,6 +137,7 @@ class BaseController extends \CI_Controller
      */
     public function _remap($method, $params = array())
     {
+        $this->_loadLanguage();
         $method .= ($this->input->server("REQUEST_METHOD") === "POST") ? "_post" : "";
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
@@ -255,14 +256,32 @@ class BaseController extends \CI_Controller
      */
     protected function _setLanguage()
     {
-        // try to use controller name as language file name
-        if ($this->langFile === true) {
-            $this->langFile = $this->router->fetch_class();
-        }
-
         // Use controller name as prefix if not set
         if ($this->langPrefix === "") {
             $this->langPrefix = strtolower($this->_method) . "_";
+        }
+
+        $this->_viewLoader->setLanguageStrings($this->langPrefix);
+
+        // check if we should include more than the on prefix
+        if (empty($this->additionalPrefixes) === false) {
+            foreach ($this->additionalPrefixes as $prefix) {
+                $this->_viewLoader->setLanguageStrings($prefix);
+            }
+        }
+    }
+
+    /**
+     * Load language file(s)
+     *
+     * Load them before the execution of controller method, so they can be used
+     * in the controller method as well. Only loads the language files.
+     */
+    protected function _loadLanguage()
+    {
+        // try to use controller name as language file name
+        if ($this->langFile === true) {
+            $this->langFile = $this->router->fetch_class();
         }
 
         if (is_string($this->langFile) === true) {
@@ -270,14 +289,6 @@ class BaseController extends \CI_Controller
         } elseif (is_array($this->langFile) === true) {
             foreach ($this->langFile as $lang) {
                 $this->lang->load($lang, $this->language);
-            }
-        }
-        $this->_viewLoader->setLanguageStrings($this->langPrefix);
-
-        // check if we should include more than the on prefix
-        if (empty($this->additionalPrefixes) === false) {
-            foreach ($this->additionalPrefixes as $prefix) {
-                $this->_viewLoader->setLanguageStrings($prefix);
             }
         }
     }
