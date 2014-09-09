@@ -117,6 +117,7 @@ class BaseController extends \CI_Controller
      */
     public function _remap($method, $params = array())
     {
+        $this->_loadLanguage();
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
             call_user_func_array(array($this, $method), $params);
@@ -157,23 +158,11 @@ class BaseController extends \CI_Controller
 
         // Load language
         if ($this->includeLang === true) {
-            // try to use controller name as language file name
-            if ($this->langFile === "") {
-                $this->langFile = $this->router->fetch_class();
-            }
-
             // Use controller name as prefix if not set
             if ($this->langPrefix === "") {
                 $this->langPrefix = strtolower($this->_method) . "_";
             }
 
-            if (is_string($this->langFile) === true) {
-                $this->lang->load($this->langFile, $this->language);
-            } elseif (is_array($this->langFile) === true) {
-                foreach ($this->langFile as $lang) {
-                    $this->lang->load($lang, $this->language);
-                }
-            }
             $this->_viewLoader->setLanguageStrings($this->langPrefix);
         }
 
@@ -193,5 +182,29 @@ class BaseController extends \CI_Controller
         // We have everything, now just load the view
         $this->_viewLoader->loadView($this->view, $this->viewData);
         return true;
+    }
+
+    /**
+     * Load language file(s)
+     *
+     * Load them before the execution of controller method, so they can be used
+     * in the controller method as well. Only loads the language files.
+     */
+    protected function _loadLanguage()
+    {
+        if ($this->includeLang === true) {
+            // try to use controller name as language file name
+            if ($this->langFile === "") {
+                $this->langFile = $this->router->fetch_class();
+            }
+        }
+
+        if (is_string($this->langFile) === true) {
+            $this->lang->load($this->langFile, $this->language);
+        } elseif (is_array($this->langFile) === true) {
+            foreach ($this->langFile as $lang) {
+                $this->lang->load($lang, $this->language);
+            }
+        }
     }
 }
