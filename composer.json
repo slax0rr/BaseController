@@ -1,8 +1,8 @@
 {
     "name": "slaxweb/ci-basecontroller",
     "description": "BaseController for CodeIgniter",
-    "license": "GPLv3",
-    "version": "0.1.1",
+    "license": "MIT",
+    "version": "0.1.2",
     "authors": [
         {
             "name": "Tomaz Lovrec",
