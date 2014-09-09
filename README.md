@@ -288,6 +288,15 @@ BasicController also allows you to manually load any view file you want. Because
 ChangeLog
 =========
 
+0.1.2
+-----
+Fix merge conflicts when including the language file loading before execution of controller method
+
+0.1.1
+-----
+Versioning changed
+Load language files before executing the controller method
+
 0.1.1.0
 -------
 
