@@ -87,6 +87,14 @@ class BaseController extends \CI_Controller
      */
     public $langPrefix = "";
     /**
+     * Additional language prefix
+     *
+     * If you need more than one prefix, you can set it to this array.
+     *
+     * @var array
+     */
+    public $additionalPrefixes = array();
+    /**
      * Controller method
      *
      * @var string
@@ -164,6 +172,13 @@ class BaseController extends \CI_Controller
             }
 
             $this->_viewLoader->setLanguageStrings($this->langPrefix);
+
+            // check if we should include more than the on prefix
+            if (empty($this->additionalPrefixes) === false) {
+                foreach ($this->additionalPrefixes as $prefix) {
+                    $this->_viewLoader->setLanguageStrings($prefix);
+                }
+            }
         }
 
         // Load the sub-views
