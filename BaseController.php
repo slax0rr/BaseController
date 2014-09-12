@@ -154,15 +154,11 @@ class BaseController extends \CI_Controller
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
 
-            if ($this->beforeMethod !== "" && method_exists($this->beforeMethod)) {
-                call_user_func($this->beforeMethod);
-            }
+            $this->_callback($this->beforeMethod);
 
             call_user_func_array(array($this, $method), $params);
 
-            if ($this->afterMethod !== "" && method_exists($this->afterMethod)) {
-                call_user_func($this->afterMethod);
-            }
+            $this->_callback($this->afterMethod);
 
             $this->_loadViews();
         } elseif (method_exists($this, "_404")) {
@@ -182,9 +178,7 @@ class BaseController extends \CI_Controller
      */
     protected function _loadModels()
     {
-        if ($this->beforeModel !== "" && method_exists($this->beforeModel)) {
-            call_user_func($this->beforeModel);
-        }
+        $this->_callback($this->beforeModel);
 
         if (isset($this->models) === false || $this->models !== false) {
             $model = ucfirst("{$this->router->fetch_class()}_model");
@@ -199,9 +193,7 @@ class BaseController extends \CI_Controller
             }
         }
 
-        if ($this->afterModel !== "" && method_exists($this->afterModel)) {
-            call_user_func($this->afterModel);
-        }
+        $this->_callback($this->afterModel);
     }
 
     /**
@@ -309,9 +301,7 @@ class BaseController extends \CI_Controller
      */
     protected function _loadLanguage()
     {
-        if ($this->beforeLanguage !== "" && method_exists($this->beforeLanguage)) {
-            call_user_func($this->beforeLanguage);
-        }
+        $this->_callback($this->beforeLanguage);
 
         // try to use controller name as language file name
         if ($this->langFile === true) {
@@ -326,9 +316,7 @@ class BaseController extends \CI_Controller
             }
         }
 
-        if ($this->afterLanguage !== "" && method_exists($this->afterLanguage)) {
-            call_user_func($this->afterLanguage);
-        }
+        $this->_callback($this->afterLanguage);
     }
 
     /**
@@ -361,6 +349,22 @@ class BaseController extends \CI_Controller
         );
         if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
             $this->layout = "layouts/default";
+        }
+    }
+
+    protected function _callback($callback)
+    {
+        $call = false;
+        if (is_array($callback)) {
+            if (method_exists($callback[0], $callback[1])) {
+                $call = true;
+            }
+        } elseif (function_exists($callback)) {
+            $call = true;
+        }
+
+        if ($call === true) {
+            call_user_func($callback);
         }
     }
 }
