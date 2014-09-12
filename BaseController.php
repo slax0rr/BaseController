@@ -117,6 +117,18 @@ class BaseController extends \CI_Controller
      * @var \SlaxWeb\ViewLoader\Loader
      */
     protected $_viewLoader = null;
+    /*************
+     * Callbacks *
+     *************/
+    public $beforeLanguage = "";
+    public $afterLanguage = "";
+
+    public $beforeMethod = "";
+    public $afterMethod = "";
+
+    public $beforeModel = "";
+    public $afterModel = "";
+
 
     /**
      * Initiate the view loader class
@@ -141,7 +153,17 @@ class BaseController extends \CI_Controller
         $method .= ($this->input->server("REQUEST_METHOD") === "POST") ? "_post" : "";
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
+
+            if ($this->beforeMethod !== "" && method_exists($this->beforeMethod)) {
+                call_user_func($this->beforeMethod);
+            }
+
             call_user_func_array(array($this, $method), $params);
+
+            if ($this->afterMethod !== "" && method_exists($this->afterMethod)) {
+                call_user_func($this->afterMethod);
+            }
+
             $this->_loadViews();
         } elseif (method_exists($this, "_404")) {
             $this->_method = "_404";
@@ -160,6 +182,10 @@ class BaseController extends \CI_Controller
      */
     protected function _loadModels()
     {
+        if ($this->beforeModel !== "" && method_exists($this->beforeModel)) {
+            call_user_func($this->beforeModel);
+        }
+
         if (isset($this->models) === false || $this->models !== false) {
             $model = ucfirst("{$this->router->fetch_class()}_model");
             if (file_exists(APPPATH . "models/{$model}.php")) {
@@ -171,6 +197,10 @@ class BaseController extends \CI_Controller
                     $this->load->model("{$m}_model", $m);
                 }
             }
+        }
+
+        if ($this->afterModel !== "" && method_exists($this->afterModel)) {
+            call_user_func($this->afterModel);
         }
     }
 
@@ -279,6 +309,10 @@ class BaseController extends \CI_Controller
      */
     protected function _loadLanguage()
     {
+        if ($this->beforeLanguage !== "" && method_exists($this->beforeLanguage)) {
+            call_user_func($this->beforeLanguage);
+        }
+
         // try to use controller name as language file name
         if ($this->langFile === true) {
             $this->langFile = $this->router->fetch_class();
@@ -290,6 +324,10 @@ class BaseController extends \CI_Controller
             foreach ($this->langFile as $lang) {
                 $this->lang->load($lang, $this->language);
             }
+        }
+
+        if ($this->afterLanguage !== "" && method_exists($this->afterLanguage)) {
+            call_user_func($this->afterLanguage);
         }
     }
 
