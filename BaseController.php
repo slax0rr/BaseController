@@ -117,6 +117,25 @@ class BaseController extends \CI_Controller
      * @var \SlaxWeb\ViewLoader\Loader
      */
     protected $_viewLoader = null;
+
+    /*************************
+     * Basic CRUD properties *
+     *************************/
+    /**
+     * Create part of CRUD validation rules
+     *
+     * @var array
+     */
+    public $createRules = array();
+    /**
+     * View for after Create
+     *
+     * If left empty the default "create" method view will be used.
+     *
+     * @var string
+     */
+    public $afterCreate = "";
+
     /*************
      * Callbacks *
      *************/
@@ -167,6 +186,35 @@ class BaseController extends \CI_Controller
             $this->_loadViews();
         } else {
             show_404();
+        }
+    }
+
+    /****************************
+     * Basic CRUD functionality *
+     ****************************/
+    /**
+     * Create method
+     *
+     * Create part of crud, executed automatically.
+     * Method is auto accessed through POST request method.
+     */
+    public function create_post()
+    {
+        $data = $this->input->post();
+        $model = $this->router->fetch_class();
+        $this->{$model}->rules = $this->createRules;
+        $status = $this->{$model}->insert($data);
+
+        $this->view = $this->afterCreate;
+
+        if ($status !== true) {
+            if ($error = $status->error("VALIDATION_ERROR")) {
+                $this->viewData = array("createError" => $error->message);
+                return;
+            } elseif ($error = $status->error("CREATE_ERROR")) {
+                $this->viewData = array("createError" => $error->message);
+                return;
+            }
         }
     }
 
