@@ -201,20 +201,21 @@ class BaseController extends \CI_Controller
     public function create_post()
     {
         $data = $this->input->post();
-        $model = $this->router->{fetch_class()};
+        $model = $this->router->fetch_class();
         $this->{$model}->rules = $this->createRules;
-        $status = $this->{$model}->inset($data);
+        $status = $this->{$model}->insert($data);
+
+        $this->view = $this->afterCreate;
 
         if ($status !== true) {
             if ($error = $status->error("VALIDATION_ERROR")) {
+                $this->viewData = array("createError" => $error->message);
                 return;
             } elseif ($error = $status->error("CREATE_ERROR")) {
                 $this->viewData = array("createError" => $error->message);
                 return;
             }
         }
-
-        $this->view = $this->afterCreate;
     }
 
     /**
