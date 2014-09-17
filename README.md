@@ -354,27 +354,27 @@ class Cntrlr extends \SlaxWeb\BaseController\BaseController
 CRUD
 ====
 
-CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods, that retrieve data, inject them into the view data, as well as take post data for creation, update and deletion of database data, as long as your models provide the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
+CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods that retrieve data, inject them into the view data as well as take post data for creation, update and deletion of database data. As long as your models provides the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
 
 There are 4 methods for CRUD:
-* index - gets the data from the database and injects the BaseModel Result object into view data as **_tableData** variable
+* index - fetches the data from the database and injects the BaseModel Result object into view data as **_tableData** variable
 * update_post - takes the post data as well as an ID as the input parameter and updates the database table, if ID is int(0), then all records will be updated
 * create_post - takes the post data and inserts it into the Table
-* delete_post - takes the ID as input parameter and deletes the record, if ID is int(0) it deletes all records in the table
+* delete_post - takes the ID as input parameter and deletes the record. If ID is int(0) it deletes all records in the table
 
-All but index(Create) are accessed through POST HTTP request method, and also all 3 provide a means to load a specific view after they have completed, and also set an error in view data, if the operation was not successful. This is done through 3 different BaseController properties:
+All but index(Create) are accessed through POST HTTP request method, and also all 3 provide a means to load a specific view after they have completed, and also set an error in view data if the operation was not successful. This is done through 3 different BaseController properties:
 * afterUpdate
 * afterCreate
 * afterDelete
 
-Those need to contain the string location of the view to be loaded, if left empty, the respective default view will be loaded as per methods HTTP GET request counterpart(update, create, delete).
+Those need to contain the string location of the view to be loaded. If left empty, the respective default view will be loaded as per methods HTTP GET request counterpart (update, create, delete).
 
 Update and Create also provide a means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
 
-On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are 3 types of errors, validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain keys:
+On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are 3 types of errors: validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain following keys:
 * error_validation_error - for when validation error occurs
 * error_update_error - for when an update error occurs
-* error_create_error - for when an create error occurs
+* error_create_error - for when a create error occurs
 * error_delete_generic - for when a delete error occurs
 
 If those are set, you will get this error message in your view data. On validation errors you can normally use the CodeIgniter validation error printout as well.
