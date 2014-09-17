@@ -35,6 +35,9 @@ Table of contents
   * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated---disable-template)
   * [Layout](https://github.com/slax0rr/BaseController/blob/develop/README.md#layout)
 * [Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
+* [Models](https://github.com/slax0rr/BaseController/blob/develop/README.md#models)
+  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-3)
+* [CRUD](https://github.com/slax0rr/BaseController/blob/develop/README.md#crud)
 * [ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
 
 Install
@@ -325,14 +328,69 @@ Manual view loading
 
 BasicController also allows you to manually load any view file you want. Because BaseController is using the [ViewLoader](https://github.com/slax0rr/ViewLoader), you can access it through the protected **_viewLoader** property. For help with using the ViewLoader, please read the readme [here](https://github.com/slax0rr/ViewLoader/blob/develop/README.md).
 
+Models
+======
+
+BaseController now tries to auto-load the default model for this controller, which needs to have the same name as the controller it self, with the *_model* suffix. You can also add additional models you may want to load to the **models** property. Models are then accessible as $this->{Model name}, without the *_model* suffix.
+
+Example
+-------
+
+```PHP
+class Cntrlr extends \SlaxWeb\BaseController\BaseController
+{
+    // Autoload models Model1_model and Model2_model
+    public $models = array("Model1", "Model2");
+
+    public function someMethod()
+    {
+        // now just use the model:
+        $this->Model1->modelMethod();
+        $this->Model2->modelMethod();
+    }
+}
+```
+
+CRUD
+====
+
+CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods, that retrieve data, inject them into the view data, as well as take post data for creation, update and deletion of database data, as long as your models provide the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
+
+There are 4 methods for CRUD:
+* index - gets the data from the database and injects the BaseModel Result object into view data as **_tableData** variable
+* update_post - takes the post data as well as an ID as the input parameter and updates the database table, if ID is int(0), then all records will be updated
+* create_post - takes the post data and inserts it into the Table
+* delete_post - takes the ID as input parameter and deletes the record, if ID is int(0) it deletes all records in the table
+
+All but index(Create) are accessed through POST HTTP request method, and also all 3 provide a means to load a specific view after they have completed, and also set an error in view data, if the operation was not successful. This is done through 3 different BaseController properties:
+* afterUpdate
+* afterCreate
+* afterDelete
+Those need to contain the string location of the view to be loaded, if left empty, the respective default view will be loaded as per methods HTTP GET request counterpart(update, create, delete).
+
+Update and Create also provide a means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
+
+On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are 3 types of errors, validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain keys:
+* error_validation_error - for when validation error occurs
+* error_update_error - for when an update error occurs
+* error_create_error - for when an create error occurs
+* error_delete_generic - for when a delete error occurs
+If those are set, you will get this error message in your view data. On validation errors you can normally use the CodeIgniter validation error printout as well.
+
 ChangeLog
 =========
 
 0.2.0 - develop
 ---------------
 
-* Switch version numbers
 * Add layout support
+* Add basic CRUD
+* Autoload models
+* Autload languages before executing the controller method
+* Callbacks
+* Code abstraction
+* Deprecated old template header/footer
+* Language file loading disabled with property *langFile*, was *includeLang* before
 
 0.1.1.0
 -------
