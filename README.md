@@ -366,6 +366,7 @@ All but index(Create) are accessed through POST HTTP request method, and also al
 * afterUpdate
 * afterCreate
 * afterDelete
+
 Those need to contain the string location of the view to be loaded, if left empty, the respective default view will be loaded as per methods HTTP GET request counterpart(update, create, delete).
 
 Update and Create also provide a means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
@@ -375,6 +376,7 @@ On error, Create, Update and Delete will inject the error strings as *createErro
 * error_update_error - for when an update error occurs
 * error_create_error - for when an create error occurs
 * error_delete_generic - for when a delete error occurs
+
 If those are set, you will get this error message in your view data. On validation errors you can normally use the CodeIgniter validation error printout as well.
 
 ChangeLog
