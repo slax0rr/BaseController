@@ -135,6 +135,28 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $afterCreate = "";
+    /**
+     * Update part of CRUD validation rules
+     *
+     * @var array
+     */
+    public $updateRules = array();
+    /**
+     * View for after Update
+     *
+     * If left empty the default "update" method view will be use.
+     *
+     * @var string
+     */
+    public $afterUpdate = "";
+    /**
+     * View for after Delete
+     *
+     * If left empty the default "delete" method view will be use.
+     *
+     * @var string
+     */
+    public $afterDelete = "";
 
     /*************
      * Callbacks *
@@ -193,6 +215,20 @@ class BaseController extends \CI_Controller
      * Basic CRUD functionality *
      ****************************/
     /**
+     * Retrieve method
+     *
+     * Retrieve part of crud, executed automatically.
+     * Method retrieves all parameters from its respective models table, and
+     * injects them into the view data.
+     */
+    public function index($id = 0)
+    {
+        $model = $this->router->fetch_class();
+        $data = $this->{$model}->get($id);
+        $this->viewData = array_merge($this->viewData, array("_tableData" => $data));
+    }
+
+    /**
      * Create method
      *
      * Create part of crud, executed automatically.
@@ -213,6 +249,61 @@ class BaseController extends \CI_Controller
                 return;
             } elseif ($error = $status->error("CREATE_ERROR")) {
                 $this->viewData = array("createError" => $error->message);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Update method
+     *
+     * Update part of crud, executed automatically.
+     * Method is accessed through POST request method,
+     * and updates all the parameters found in the POST array.
+     */
+    public function update_post($id = 0)
+    {
+        $data = $this->input->post();
+        $model = $this->router->fetch_class();
+        $this->{$model}->rules = $this->updateRules;
+        $status = $this->{$model}->update($data, $id);
+
+        $this->view = $this->afterUpdate;
+
+        if ($status !== true) {
+            if ($error = $status->error("VALIDATION_ERROR")) {
+                $this->viewData = array("updateError" => $error->message);
+                return;
+            } elseif ($error = $status->error("UPDATE_ERROR")) {
+                $this->viewData = array("updateError" => $error->message);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Delete method
+     *
+     * Delete part of crud, executed automatically.
+     * Method is accessed through POST request method,
+     * and deletes the record from the database.
+     *
+     * Even though the request has to be a post method, the ID to be deleted
+     * still has to be sent as normal parameter.
+     */
+    public function delete_post($id = 0)
+    {
+        $model = $this->router->fetch_class();
+        $status = $this->{$model}->delete($id);
+
+        $this->view = $this->afterDelete;
+
+        if ($status !== true) {
+            if ($status === false) {
+                $this->viewData = array("deleteError" => $this->lang->line("error_delete_generic"));
+                return;
+            } elseif ($error = $status->error("UPDATE_ERROR")) {
+                $this->viewData = array("deleteError" => $error->message);
                 return;
             }
         }
