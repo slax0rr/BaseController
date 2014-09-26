@@ -7,38 +7,38 @@ The idea for the BaseController came from Jamie Rumbelows [base controller](http
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
 
-This is still in development phase, but is available for public as early-beta. Please use with caution, I can not guarantee that something will not change along the way.
+This is still in development phase, but is production ready. All existing stuff will be there and if changes do occur, old ways will be kept around in deprecated state.
 
 Table of contents
 =================
-* [BaseController](https://github.com/slax0rr/BaseController/blob/develop/README.md#basecontroller)
-* [Table of contents](https://github.com/slax0rr/BaseController/blob/develop/README.md#table-of-contents)
-* [Install](https://github.com/slax0rr/BaseController/blob/develop/README.md#install)
-* [View loading and data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-loading-and-data)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example)
-  * [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage)
-  * [Disable view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-view-loading)
-  * [Change view file](https://github.com/slax0rr/BaseController/blob/develop/README.md#change-view-file)
-  * [Load sub-views](https://github.com/slax0rr/BaseController/blob/develop/README.md#load-sub-views)
-  * [View data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-data)
-  * [Controller 404 page](https://github.com/slax0rr/BaseController/blob/develop/README.md#controller-404-page)
-* [Languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#languages)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-1)
-  * [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage-1)
-  * [No languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#no-languages)
-  * [Language file](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-file)
-  * [Language prefix](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-prefix)
-  * [Non-Default language](https://github.com/slax0rr/BaseController/blob/develop/README.md#non-default-language)
-* [Templates](https://github.com/slax0rr/BaseController/blob/develop/README.md#templates)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-2)
-  * [DEPRECATED - Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated---setting-template-files)
-  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#deprecated---disable-template)
-  * [Layout](https://github.com/slax0rr/BaseController/blob/develop/README.md#layout)
-* [Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
-* [Models](https://github.com/slax0rr/BaseController/blob/develop/README.md#models)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-3)
-* [CRUD](https://github.com/slax0rr/BaseController/blob/develop/README.md#crud)
-* [ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
+* [BaseController](https://github.com/slax0rr/BaseController/blob/master/README.md#basecontroller)
+* [Table of contents](https://github.com/slax0rr/BaseController/blob/master/README.md#table-of-contents)
+* [Install](https://github.com/slax0rr/BaseController/blob/master/README.md#install)
+* [View loading and data](https://github.com/slax0rr/BaseController/blob/master/README.md#view-loading-and-data)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example)
+  * [Basic usage](https://github.com/slax0rr/BaseController/blob/master/README.md#basic-usage)
+  * [Disable view loading](https://github.com/slax0rr/BaseController/blob/master/README.md#disable-view-loading)
+  * [Change view file](https://github.com/slax0rr/BaseController/blob/master/README.md#change-view-file)
+  * [Load sub-views](https://github.com/slax0rr/BaseController/blob/master/README.md#load-sub-views)
+  * [View data](https://github.com/slax0rr/BaseController/blob/master/README.md#view-data)
+  * [Controller 404 page](https://github.com/slax0rr/BaseController/blob/master/README.md#controller-404-page)
+* [Languages](https://github.com/slax0rr/BaseController/blob/master/README.md#languages)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-1)
+  * [Basic usage](https://github.com/slax0rr/BaseController/blob/master/README.md#basic-usage-1)
+  * [No languages](https://github.com/slax0rr/BaseController/blob/master/README.md#no-languages)
+  * [Language file](https://github.com/slax0rr/BaseController/blob/master/README.md#language-file)
+  * [Language prefix](https://github.com/slax0rr/BaseController/blob/master/README.md#language-prefix)
+  * [Non-Default language](https://github.com/slax0rr/BaseController/blob/master/README.md#non-default-language)
+* [Templates](https://github.com/slax0rr/BaseController/blob/master/README.md#templates)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-2)
+  * [DEPRECATED - Setting template files](https://github.com/slax0rr/BaseController/blob/master/README.md#deprecated---setting-template-files)
+  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/master/README.md#deprecated---disable-template)
+  * [Layout](https://github.com/slax0rr/BaseController/blob/master/README.md#layout)
+* [Manual view loading](https://github.com/slax0rr/BaseController/blob/master/README.md#manual-view-loading)
+* [Models](https://github.com/slax0rr/BaseController/blob/master/README.md#models)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-3)
+* [CRUD](https://github.com/slax0rr/BaseController/blob/master/README.md#crud)
+* [ChangeLog](https://github.com/slax0rr/BaseController/blob/master/README.md#changelog)
 
 Install
 =======
@@ -48,15 +48,12 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basecontroller": "0.2.*@dev"
+    "slaxweb/ci-basecontroller": "~0.2"
   }
 }
 ```
 
-Then run **composer.phar install**. When finished, edit CodeIgniter index.php file and add this line right after PHP opening tag:
-```PHP
-require_once "vendor/autoload.php";
-```
+Then run **composer.phar install**. When finished, enable composer autoload in *application/config/config.php*.
 
 Congratulations, BaseController is installed.
 
