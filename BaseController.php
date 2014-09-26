@@ -107,6 +107,59 @@ class BaseController extends \CI_Controller
      */
     protected $_viewLoader = null;
 
+    /*************************
+     * Basic CRUD properties *
+     *************************/
+    /**
+     * Create part of CRUD validation rules
+     *
+     * @var array
+     */
+    public $createRules = array();
+    /**
+     * View for after Create
+     *
+     * If left empty the default "create" method view will be used.
+     *
+     * @var string
+     */
+    public $afterCreate = "";
+    /**
+     * Update part of CRUD validation rules
+     *
+     * @var array
+     */
+    public $updateRules = array();
+    /**
+     * View for after Update
+     *
+     * If left empty the default "update" method view will be use.
+     *
+     * @var string
+     */
+    public $afterUpdate = "";
+    /**
+     * View for after Delete
+     *
+     * If left empty the default "delete" method view will be use.
+     *
+     * @var string
+     */
+    public $afterDelete = "";
+
+    /*************
+     * Callbacks *
+     *************/
+    public $beforeLanguage = "";
+    public $afterLanguage = "";
+
+    public $beforeMethod = "";
+    public $afterMethod = "";
+
+    public $beforeModel = "";
+    public $afterModel = "";
+
+
     /**
      * Initiate the view loader class
      */
@@ -114,6 +167,7 @@ class BaseController extends \CI_Controller
     {
         parent::__construct();
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
+        $this->_loadModels();
     }
 
     /**
@@ -126,9 +180,16 @@ class BaseController extends \CI_Controller
     public function _remap($method, $params = array())
     {
         $this->_loadLanguage();
+        $method .= ($this->input->server("REQUEST_METHOD") === "POST") ? "_post" : "";
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
+
+            $this->_callback($this->beforeMethod);
+
             call_user_func_array(array($this, $method), $params);
+
+            $this->_callback($this->afterMethod);
+
             $this->_loadViews();
         } elseif (method_exists($this, "_404")) {
             $this->_method = "_404";
@@ -137,6 +198,130 @@ class BaseController extends \CI_Controller
         } else {
             show_404();
         }
+    }
+
+    /****************************
+     * Basic CRUD functionality *
+     ****************************/
+    /**
+     * Retrieve method
+     *
+     * Retrieve part of crud, executed automatically.
+     * Method retrieves all parameters from its respective models table, and
+     * injects them into the view data.
+     */
+    public function index($id = 0)
+    {
+        $model = $this->router->fetch_class();
+        $data = $this->{$model}->get($id);
+        $this->viewData = array_merge($this->viewData, array("_tableData" => $data));
+    }
+
+    /**
+     * Create method
+     *
+     * Create part of crud, executed automatically.
+     * Method is auto accessed through POST request method.
+     */
+    public function create_post()
+    {
+        $data = $this->input->post();
+        $model = $this->router->fetch_class();
+        $this->{$model}->rules = $this->createRules;
+        $status = $this->{$model}->insert($data);
+
+        $this->view = $this->afterCreate;
+
+        if ($status !== true) {
+            if ($error = $status->error("VALIDATION_ERROR")) {
+                $this->viewData = array("createError" => $error->message);
+                return;
+            } elseif ($error = $status->error("CREATE_ERROR")) {
+                $this->viewData = array("createError" => $error->message);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Update method
+     *
+     * Update part of crud, executed automatically.
+     * Method is accessed through POST request method,
+     * and updates all the parameters found in the POST array.
+     */
+    public function update_post($id = 0)
+    {
+        $data = $this->input->post();
+        $model = $this->router->fetch_class();
+        $this->{$model}->rules = $this->updateRules;
+        $status = $this->{$model}->update($data, $id);
+
+        $this->view = $this->afterUpdate;
+
+        if ($status !== true) {
+            if ($error = $status->error("VALIDATION_ERROR")) {
+                $this->viewData = array("updateError" => $error->message);
+                return;
+            } elseif ($error = $status->error("UPDATE_ERROR")) {
+                $this->viewData = array("updateError" => $error->message);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Delete method
+     *
+     * Delete part of crud, executed automatically.
+     * Method is accessed through POST request method,
+     * and deletes the record from the database.
+     *
+     * Even though the request has to be a post method, the ID to be deleted
+     * still has to be sent as normal parameter.
+     */
+    public function delete_post($id = 0)
+    {
+        $model = $this->router->fetch_class();
+        $status = $this->{$model}->delete($id);
+
+        $this->view = $this->afterDelete;
+
+        if ($status !== true) {
+            if ($status === false) {
+                $this->viewData = array("deleteError" => $this->lang->line("error_delete_generic"));
+                return;
+            } elseif ($error = $status->error("UPDATE_ERROR")) {
+                $this->viewData = array("deleteError" => $error->message);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Autoload model
+     *
+     * Try to load the guessed model, if allowed. If property "models" is an array
+     * try to load those models as well.
+     */
+    protected function _loadModels()
+    {
+        $this->_callback($this->beforeModel);
+
+        if (isset($this->models) === false || $this->models !== false) {
+            $model = ucfirst("{$this->router->fetch_class()}_model");
+            if (file_exists(APPPATH . "models/{$model}.php")) {
+                $this->load->model($model, $this->router->fetch_class());
+            }
+
+            if (isset($this->models) === true && is_array($this->models)) {
+                foreach ($this->models as $m) {
+                    $this->load->model("{$m}_model", $m);
+                }
+            }
+        }
+
+        $this->_callback($this->afterModel);
     }
 
     /**
@@ -153,50 +338,89 @@ class BaseController extends \CI_Controller
 
         // If view is not set, try to load the default view for the method
         if ($this->view === "") {
-            $this->view = strtolower(
-                "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
-            );
+            $this->_setView();
         }
 
+        /**
+         * DEPRECATED
+         */
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
+            $this->_setTemplate();
             $this->_viewLoader->setHeaderView($this->head);
             $this->_viewLoader->setFooterView($this->foot);
         }
 
         // Load language
-        if ($this->includeLang === true) {
-            // Use controller name as prefix if not set
-            if ($this->langPrefix === "") {
-                $this->langPrefix = strtolower($this->_method) . "_";
-            }
-
-            $this->_viewLoader->setLanguageStrings($this->langPrefix);
-
-            // check if we should include more than the on prefix
-            if (empty($this->additionalPrefixes) === false) {
-                foreach ($this->additionalPrefixes as $prefix) {
-                    $this->_viewLoader->setLanguageStrings($prefix);
-                }
-            }
+        if ($this->langFile === true) {
+            $this->_setLanguage();
         }
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
-            foreach ($this->subViews as $name => $view) {
-                if (is_array($view) === true) {
-                    $this->viewData["subview_{$name}"] =
-                        $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
-                } else {
-                    $this->viewData["subview_{$name}"] =
-                        $this->_viewLoader->loadView($view, $this->viewData, false, true);
-                }
-            }
+            $this->_setSubviews();
         }
 
-        // We have everything, now just load the view
-        $this->_viewLoader->loadView($this->view, $this->viewData);
+        // We have everything, now load the main view
+        $data["mainView"] = $this->_viewLoader->loadView($this->view, $this->viewData, true, true);
+
+        // If layout set to true, guess the default name of the layout
+        if ($this->layout === true) {
+            $this->_setLayout();
+        }
+
+        // If there is no layout, set everything loaded to this point to output
+        if ($this->layout === false) {
+            $this->output->set_output($data["mainView"]);
+        } else {
+            // Load the layout
+            $this->_viewLoader->loadView($this->layout, $data);
+        }
         return true;
+    }
+
+    /**
+     * Set the view
+     */
+    protected function _setView()
+    {
+        $this->view = strtolower(
+            "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
+        );
+    }
+
+    /**
+     * Set the header and footer views
+     *
+     * !DEPRECATED!
+     */
+    protected function _setTemplate()
+    {
+        $this->_viewLoader->setHeaderView($this->head);
+        $this->_viewLoader->setFooterView($this->foot);
+    }
+
+    /**
+     * Set language strings
+     *
+     * Load the language file, and inject language strings with specific prefixes
+     * in their keys.
+     */
+    protected function _setLanguage()
+    {
+        // Use controller name as prefix if not set
+        if ($this->langPrefix === "") {
+            $this->langPrefix = strtolower($this->_method) . "_";
+        }
+
+        $this->_viewLoader->setLanguageStrings($this->langPrefix);
+
+        // check if we should include more than the on prefix
+        if (empty($this->additionalPrefixes) === false) {
+            foreach ($this->additionalPrefixes as $prefix) {
+                $this->_viewLoader->setLanguageStrings($prefix);
+            }
+        }
     }
 
     /**
@@ -207,11 +431,11 @@ class BaseController extends \CI_Controller
      */
     protected function _loadLanguage()
     {
-        if ($this->includeLang === true) {
-            // try to use controller name as language file name
-            if ($this->langFile === "") {
-                $this->langFile = $this->router->fetch_class();
-            }
+        $this->_callback($this->beforeLanguage);
+
+        // try to use controller name as language file name
+        if ($this->langFile === true) {
+            $this->langFile = $this->router->fetch_class();
         }
 
         if (is_string($this->langFile) === true) {
@@ -220,6 +444,57 @@ class BaseController extends \CI_Controller
             foreach ($this->langFile as $lang) {
                 $this->lang->load($lang, $this->language);
             }
+        }
+
+        $this->_callback($this->afterLanguage);
+    }
+
+    /**
+     * Load the subviews
+     *
+     * Load them away and add them to view data
+     */
+    protected function _setSubviews()
+    {
+        foreach ($this->subViews as $name => $view) {
+            if (is_array($view) === true) {
+                $this->viewData["subview_{$name}"] =
+                    $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
+            } else {
+                $this->viewData["subview_{$name}"] =
+                    $this->_viewLoader->loadView($view, $this->viewData, false, true);
+            }
+        }
+    }
+
+    /**
+     * Set the layout
+     *
+     * Try to obtain the layout, if not exists, set up the default one
+     */
+    protected function _setLayout()
+    {
+        $this->layout = strtolower(
+            "layouts/{$this->router->fetch_directory()}{$this->router->fetch_class()}/layout"
+        );
+        if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
+            $this->layout = "layouts/default";
+        }
+    }
+
+    protected function _callback($callback)
+    {
+        $call = false;
+        if (is_array($callback)) {
+            if (method_exists($callback[0], $callback[1])) {
+                $call = true;
+            }
+        } elseif (function_exists($callback)) {
+            $call = true;
+        }
+
+        if ($call === true) {
+            call_user_func($callback);
         }
     }
 }

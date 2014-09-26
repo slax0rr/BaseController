@@ -7,34 +7,38 @@ The idea for the BaseController came from Jamie Rumbelows [base controller](http
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseController/issues).
 
-This is still in development phase, but is available for public as early-beta. Please use with caution, I can not guarantee that something will not change along the way.
+This is still in development phase, but is production ready. All existing stuff will be there and if changes do occur, old ways will be kept around in deprecated state.
 
 Table of contents
 =================
-* [BaseController](https://github.com/slax0rr/BaseController/blob/develop/README.md#basecontroller)
-* [Table of contents](https://github.com/slax0rr/BaseController/blob/develop/README.md#table-of-contents)
-* [Install](https://github.com/slax0rr/BaseController/blob/develop/README.md#install)
-* [View loading and data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-loading-and-data)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example)
-  * [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage)
-  * [Disable view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-view-loading)
-  * [Change view file](https://github.com/slax0rr/BaseController/blob/develop/README.md#change-view-file)
-  * [Load sub-views](https://github.com/slax0rr/BaseController/blob/develop/README.md#load-sub-views)
-  * [View data](https://github.com/slax0rr/BaseController/blob/develop/README.md#view-data)
-  * [Controller 404 page](https://github.com/slax0rr/BaseController/blob/develop/README.md#controller-404-page)
-* [Languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#languages)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-1)
-  * [Basic usage](https://github.com/slax0rr/BaseController/blob/develop/README.md#basic-usage-1)
-  * [No languages](https://github.com/slax0rr/BaseController/blob/develop/README.md#no-languages)
-  * [Language file](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-file)
-  * [Language prefix](https://github.com/slax0rr/BaseController/blob/develop/README.md#language-prefix)
-  * [Non-Default language](https://github.com/slax0rr/BaseController/blob/develop/README.md#non-default-language)
-* [Templates](https://github.com/slax0rr/BaseController/blob/develop/README.md#templates)
-  * [Example](https://github.com/slax0rr/BaseController/blob/develop/README.md#example-2)
-  * [Setting template files](https://github.com/slax0rr/BaseController/blob/develop/README.md#setting-template-files)
-  * [Disable template](https://github.com/slax0rr/BaseController/blob/develop/README.md#disable-template)
-* [Manual view loading](https://github.com/slax0rr/BaseController/blob/develop/README.md#manual-view-loading)
-* [ChangeLog](https://github.com/slax0rr/BaseController/blob/develop/README.md#changelog)
+* [BaseController](https://github.com/slax0rr/BaseController/blob/master/README.md#basecontroller)
+* [Table of contents](https://github.com/slax0rr/BaseController/blob/master/README.md#table-of-contents)
+* [Install](https://github.com/slax0rr/BaseController/blob/master/README.md#install)
+* [View loading and data](https://github.com/slax0rr/BaseController/blob/master/README.md#view-loading-and-data)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example)
+  * [Basic usage](https://github.com/slax0rr/BaseController/blob/master/README.md#basic-usage)
+  * [Disable view loading](https://github.com/slax0rr/BaseController/blob/master/README.md#disable-view-loading)
+  * [Change view file](https://github.com/slax0rr/BaseController/blob/master/README.md#change-view-file)
+  * [Load sub-views](https://github.com/slax0rr/BaseController/blob/master/README.md#load-sub-views)
+  * [View data](https://github.com/slax0rr/BaseController/blob/master/README.md#view-data)
+  * [Controller 404 page](https://github.com/slax0rr/BaseController/blob/master/README.md#controller-404-page)
+* [Languages](https://github.com/slax0rr/BaseController/blob/master/README.md#languages)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-1)
+  * [Basic usage](https://github.com/slax0rr/BaseController/blob/master/README.md#basic-usage-1)
+  * [No languages](https://github.com/slax0rr/BaseController/blob/master/README.md#no-languages)
+  * [Language file](https://github.com/slax0rr/BaseController/blob/master/README.md#language-file)
+  * [Language prefix](https://github.com/slax0rr/BaseController/blob/master/README.md#language-prefix)
+  * [Non-Default language](https://github.com/slax0rr/BaseController/blob/master/README.md#non-default-language)
+* [Templates](https://github.com/slax0rr/BaseController/blob/master/README.md#templates)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-2)
+  * [DEPRECATED - Setting template files](https://github.com/slax0rr/BaseController/blob/master/README.md#deprecated---setting-template-files)
+  * [DEPRECATED - Disable template](https://github.com/slax0rr/BaseController/blob/master/README.md#deprecated---disable-template)
+  * [Layout](https://github.com/slax0rr/BaseController/blob/master/README.md#layout)
+* [Manual view loading](https://github.com/slax0rr/BaseController/blob/master/README.md#manual-view-loading)
+* [Models](https://github.com/slax0rr/BaseController/blob/master/README.md#models)
+  * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-3)
+* [CRUD](https://github.com/slax0rr/BaseController/blob/master/README.md#crud)
+* [ChangeLog](https://github.com/slax0rr/BaseController/blob/master/README.md#changelog)
 
 Install
 =======
@@ -44,15 +48,12 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basecontroller": "~0.1"
+    "slaxweb/ci-basecontroller": "~0.2"
   }
 }
 ```
 
-Then run **composer.phar install**. When finished, edit CodeIgniter index.php file and add this line right after PHP opening tag:
-```PHP
-require_once "vendor/autoload.php";
-```
+Then run **composer.phar install**. When finished, enable composer autoload in *application/config/config.php*.
 
 Congratulations, BaseController is installed.
 
@@ -163,7 +164,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
   
   public function noLang()
   {
-    $this->includeLang = false;
+    $this->langFile = false;
   }
   
   public function diffLangFile()
@@ -207,9 +208,10 @@ In the view, vars **$var1**, **$var2**, and **$var3**, will be available.
 No languages
 ------------
 
-To disable loading of languages, simply disable it by setting property **includeLang** to false.
+To disable loading of languages, simply disable it by setting property **langFile** to false.
+WARNING! Property used for disabling the language file loading in 0.1.* versions is **includeLang**!
 ```PHP
-$this->includeLang = false;
+$this->langFile = false;
 ```
 
 Language file
@@ -249,22 +251,39 @@ Example
 ```PHP
 class Contrlr extends \SlaxWeb\BaseController\BaseController
 {
+  // DEPRECATED
   public function template()
   {
     $this->head = "head/view";
     $this->foot = "foot/view";
   }
   
+  // DEPRECATED
   public function noTemplate()
   {
     // if a template is already loaded, you can disable it
     $this->include = false;
   }
+
+  public function layout()
+  {
+    // to load a layout, set layout property to true
+    // base controller will try to load the controllers layout if not found
+    // it will load the application default layout
+    $this->layout = true;
+  }
+
+  public function specificLayout()
+  {
+    // if you want your method or whole controller to have a specific
+layout file you can set it to the layout property
+    $this->layout = "layout/view";
+  }
 }
 ```
 
-Setting template files
-----------------------
+DEPRECATED - Setting template files
+-----------------------------------
 
 In order to set the header and/or footer files, properties **head**, and **foot** must be set. Then the header view will be loaded before the controller view(s), and the footer will come after.
 ```PHP
@@ -272,12 +291,33 @@ $this->head = "head/view";
 $this->foot = "foot/view";
 ```
 
-Disable template
-----------------
+DEPRECATED - Disable template
+-----------------------------
 
 If you have set the template files, but would not like to display the header and footer views, you need to set the **include** property to false.
 ```PHP
 $this->include = false;
+```
+
+Layout
+------
+
+Instead of header/footer files, BaseController now provides layouts. The
+layout is the whole template and your controller view gets injected into
+this layout view through the **mainView** variable. You have four
+options:
+* No layout (default), set BaseController **layout** property to false
+* Controller specific layout, set property **layout** to true,
+  BaseController will try to load the default controller layout file from {views}/layouts/ControllerDir/ControllerName/layout
+* Application specific layout, set property **layout** to true, and make
+  sure controller specific layout view file does not exists
+* Custom layout, set the path to the layout view file to the **layout**
+  property
+```PHP
+// use controller or application specific layout
+$this->layout = true;
+// use custom layout
+$this->layout = 'layout/myLayout';
 ```
 
 Manual view loading
@@ -285,17 +325,80 @@ Manual view loading
 
 BasicController also allows you to manually load any view file you want. Because BaseController is using the [ViewLoader](https://github.com/slax0rr/ViewLoader), you can access it through the protected **_viewLoader** property. For help with using the ViewLoader, please read the readme [here](https://github.com/slax0rr/ViewLoader/blob/develop/README.md).
 
+Models
+======
+
+BaseController now tries to auto-load the default model for this controller, which needs to have the same name as the controller it self, with the *_model* suffix. You can also add additional models you may want to load to the **models** property. Models are then accessible as $this->{Model name}, without the *_model* suffix.
+
+Example
+-------
+
+```PHP
+class Cntrlr extends \SlaxWeb\BaseController\BaseController
+{
+    // Autoload models Model1_model and Model2_model
+    public $models = array("Model1", "Model2");
+
+    public function someMethod()
+    {
+        // now just use the model:
+        $this->Model1->modelMethod();
+        $this->Model2->modelMethod();
+    }
+}
+```
+
+CRUD
+====
+
+CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods that retrieve data, inject them into the view data as well as take post data for creation, update and deletion of database data. As long as your models provides the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
+
+There are 4 methods for CRUD:
+* index - fetches the data from the database and injects the BaseModel Result object into view data as **_tableData** variable
+* update_post - takes the post data as well as an ID as the input parameter and updates the database table, if ID is int(0), then all records will be updated
+* create_post - takes the post data and inserts it into the Table
+* delete_post - takes the ID as input parameter and deletes the record. If ID is int(0) it deletes all records in the table
+
+All but index(Create) are accessed through POST HTTP request method, and also all 3 provide a means to load a specific view after they have completed, and also set an error in view data if the operation was not successful. This is done through 3 different BaseController properties:
+* afterUpdate
+* afterCreate
+* afterDelete
+
+Those need to contain the string location of the view to be loaded. If left empty, the respective default view will be loaded as per methods HTTP GET request counterpart (update, create, delete).
+
+Update and Create also provide a means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
+
+On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are 3 types of errors: validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain following keys:
+* error_validation_error - for when validation error occurs
+* error_update_error - for when an update error occurs
+* error_create_error - for when a create error occurs
+* error_delete_generic - for when a delete error occurs
+
+If those are set, you will get this error message in your view data. On validation errors you can normally use the CodeIgniter validation error printout as well.
+
 ChangeLog
 =========
 
+0.2.0 - develop
+---------------
+
+* Add layout support
+* Add basic CRUD
+* Autoload models
+* Autload languages before executing the controller method
+* Callbacks
+* Code abstraction
+* Deprecated old template header/footer
+* Language file loading disabled with property *langFile*, was *includeLang* before
+
 0.1.2
 -----
-Fix merge conflicts when including the language file loading before execution of controller method
+* Fix merge conflicts when including the language file loading before execution of controller method
 
 0.1.1
 -----
-Versioning changed
-Load language files before executing the controller method
+* Versioning changed
+* Load language files before executing the controller method
 
 0.1.1.0
 -------
