@@ -391,6 +391,15 @@ ChangeLog
 * Deprecated old template header/footer
 * Language file loading disabled with property *langFile*, was *includeLang* before
 
+0.1.2
+-----
+* Fix merge conflicts when including the language file loading before execution of controller method
+
+0.1.1
+-----
+* Versioning changed
+* Load language files before executing the controller method
+
 0.1.1.0
 -------
 

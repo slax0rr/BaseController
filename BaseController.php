@@ -37,17 +37,7 @@ class BaseController extends \CI_Controller
      */
     public $subViews = array();
     /**
-     * Include Header/Footer
-     *
-     * DEPRECATED!
-     *
-     * @var bool
-     */
-    public $include = true;
-    /**
      * Header View
-     *
-     * DEPRECATED!
      *
      * @var string
      */
@@ -55,31 +45,30 @@ class BaseController extends \CI_Controller
     /**
      * Footer View
      *
-     * DEPRECATED!
-     *
      * @var string
      */
     public $foot = "";
     /**
-     * Layout
+     * Include Header/Footer
      *
-     * If set to false (default) the layout will not be used, if set to true,
-     * BaseController will try to guess the default layout file for current
-     * controller (layouts/ControllerDir/ControllerName/layout),
-     * or you can also set you layout file manually into this property.
-     *
-     * @var mixed
+     * @var bool
      */
-    public $layout = false;
+    public $include = true;
+    /**
+     * Include language in view data
+     *
+     * @var bool
+     */
+    public $includeLang = true;
     /**
      * Language file
      *
      * Use controller name as language file if not set. Can be set with either one language file in a string
-     * or multiple files in an array. If set to false, no language file gets loaded.
+     * or multiple files in an array.
      *
      * @var mixed
      */
-    public $langFile = true;
+    public $langFile = "";
     /**
      * Language
      *
@@ -358,10 +347,12 @@ class BaseController extends \CI_Controller
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
             $this->_setTemplate();
+            $this->_viewLoader->setHeaderView($this->head);
+            $this->_viewLoader->setFooterView($this->foot);
         }
 
         // Load language
-        if ($this->langFile == true) {
+        if ($this->langFile === true) {
             $this->_setLanguage();
         }
 
