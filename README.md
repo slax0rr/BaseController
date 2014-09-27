@@ -379,8 +379,13 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
-0.2.0 - develop
----------------
+0.2.1
+-----
+
+* Fix the merge mess
+
+0.2.0
+-----
 
 * Add layout support
 * Add basic CRUD

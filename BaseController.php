@@ -55,20 +55,14 @@ class BaseController extends \CI_Controller
      */
     public $include = true;
     /**
-     * Include language in view data
-     *
-     * @var bool
-     */
-    public $includeLang = true;
-    /**
      * Language file
      *
      * Use controller name as language file if not set. Can be set with either one language file in a string
-     * or multiple files in an array.
+     * or multiple files in an array. If set to false, no language file is used.
      *
      * @var mixed
      */
-    public $langFile = "";
+    public $langFile = true;
     /**
      * Language
      *
