@@ -379,6 +379,11 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
+0.2.2
+-----
+
+* Language not being set due to merge mess
+
 0.2.1
 -----
 
