@@ -341,8 +341,6 @@ class BaseController extends \CI_Controller
         // Are header and footer set? And are they to be included?
         if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
             $this->_setTemplate();
-            $this->_viewLoader->setHeaderView($this->head);
-            $this->_viewLoader->setFooterView($this->foot);
         }
 
         // Load language
