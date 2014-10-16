@@ -37,6 +37,12 @@ class BaseController extends \CI_Controller
      */
     public $subViews = array();
     /**
+     * Include Header/Footer
+     *
+     * @var bool
+     */
+    public $include = true;
+    /**
      * Header View
      *
      * @var string
@@ -49,11 +55,16 @@ class BaseController extends \CI_Controller
      */
     public $foot = "";
     /**
-     * Include Header/Footer
+     * Layout
      *
-     * @var bool
+     * If set to false (default) the layout will not be used, if set to true,
+     * BaseController will try to guess the default layout file for current
+     * controller (layouts/ControllerDir/ControllerName/layout),
+     * or you can also set you layout file manually into this property.
+     *
+     * @var mixed
      */
-    public $include = true;
+    public $layout = false;
     /**
      * Language file
      *
