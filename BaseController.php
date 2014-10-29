@@ -155,6 +155,9 @@ class BaseController extends \CI_Controller
     /*************
      * Callbacks *
      *************/
+    /**
+     * DEPRECATED
+     */
     public $beforeLanguage = "";
     public $afterLanguage = "";
 
@@ -485,6 +488,15 @@ class BaseController extends \CI_Controller
         }
     }
 
+    /**
+     * DEPRECATED
+     *
+     * Callback method
+     *
+     * This method calls all the callbacks, if they are defined, to eliminate
+     * the need for checking in each point of the BaseController if the code needs
+     * to be called.
+     */
     protected function _callback($callback)
     {
         $call = false;
