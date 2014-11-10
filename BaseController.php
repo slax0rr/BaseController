@@ -176,8 +176,8 @@ class BaseController extends \CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->config("slaxweb/basecontroller", true);
-        switch ($this->config->item("controller_class_case", "basecontroller")) {
+        $this->load->config("slaxweb/basecontroller");
+        switch ($this->config->item("controller_class_case")) {
             case 0:
                 $this->_class = $this->router->fetch_class();
                 break;
