@@ -151,6 +151,12 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $afterDelete = "";
+    /**
+     * Controller class
+     *
+     * @var string
+     */
+    protected $_class = "";
 
     /*************
      * Callbacks *
@@ -170,6 +176,22 @@ class BaseController extends \CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->config("slaxweb/basecontroller");
+        switch ($this->config->item("controller_class_case")) {
+            case 0:
+                $this->_class = $this->router->fetch_class();
+                break;
+            case 1:
+                $this->_class = ucfirst($this->router->fetch_class());
+                break;
+            case 2:
+                $this->_class = strtolower($this->router->fetch_class());
+                break;
+            default:
+                $this->_class = $this->router->fetch_class();
+                break;
+        }
+
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
         $this->_loadModels();
     }
@@ -216,7 +238,7 @@ class BaseController extends \CI_Controller
      */
     public function index($id = 0)
     {
-        $model = $this->router->fetch_class();
+        $model = $this->_class;
         $data = $this->{$model}->get($id);
         $this->viewData = array_merge($this->viewData, array("_tableData" => $data));
     }
@@ -230,7 +252,7 @@ class BaseController extends \CI_Controller
     public function create_post()
     {
         $data = $this->input->post();
-        $model = $this->router->fetch_class();
+        $model = $this->_class;
         $this->{$model}->rules = $this->createRules;
         $status = $this->{$model}->insert($data);
 
@@ -257,7 +279,7 @@ class BaseController extends \CI_Controller
     public function update_post($id = 0)
     {
         $data = $this->input->post();
-        $model = $this->router->fetch_class();
+        $model = $this->_class;
         $this->{$model}->rules = $this->updateRules;
         $status = $this->{$model}->update($data, $id);
 
@@ -286,7 +308,7 @@ class BaseController extends \CI_Controller
      */
     public function delete_post($id = 0)
     {
-        $model = $this->router->fetch_class();
+        $model = $this->_class;
         $status = $this->{$model}->delete($id);
 
         $this->view = $this->afterDelete;
@@ -313,9 +335,9 @@ class BaseController extends \CI_Controller
         $this->_callback($this->beforeModel);
 
         if (isset($this->models) === false || $this->models !== false) {
-            $model = ucfirst("{$this->router->fetch_class()}_model");
+            $model = ucfirst("{$this->_class}_model");
             if (file_exists(APPPATH . "models/{$model}.php")) {
-                $this->load->model($model, $this->router->fetch_class());
+                $this->load->model($model, $this->_class);
             }
 
             if (isset($this->models) === true && is_array($this->models)) {
@@ -387,7 +409,7 @@ class BaseController extends \CI_Controller
     protected function _setView()
     {
         $this->view = strtolower(
-            "{$this->router->fetch_directory()}{$this->router->fetch_class()}/{$this->_method}/main"
+            "{$this->router->fetch_directory()}{$this->_class}/{$this->_method}/main"
         );
     }
 
@@ -437,7 +459,7 @@ class BaseController extends \CI_Controller
 
         // try to use controller name as language file name
         if ($this->langFile === true) {
-            $this->langFile = $this->router->fetch_class();
+            $this->langFile = $this->_class;
         }
 
         if (is_string($this->langFile) === true) {
@@ -477,7 +499,7 @@ class BaseController extends \CI_Controller
     protected function _setLayout()
     {
         $this->layout = strtolower(
-            "layouts/{$this->router->fetch_directory()}{$this->router->fetch_class()}/layout"
+            "layouts/{$this->router->fetch_directory()}{$this->_class}/layout"
         );
         if (file_exists(VIEWPATH . $this->layout . ".php") === false) {
             $this->layout = "layouts/default";
