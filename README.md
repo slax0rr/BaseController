@@ -379,10 +379,12 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
-0.3.0 - develop
----------------
+0.3.0
+-----
 
 * Change callback definition to arrays to support multiple callbacks at same point
+* Add config file for class name case sensitivity
+* Convert class names based on case sensitivity
 
 0.2.3
 -----
