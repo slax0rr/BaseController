@@ -20,7 +20,7 @@
 	},
     "extra": {
         "branch-alias": {
-            "dev-develop": "0.3.x-dev"
+            "dev-develop": "0.4.x-dev"
         }
     },
     "target-dir": "SlaxWeb/BaseController"
