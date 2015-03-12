@@ -155,15 +155,14 @@ class BaseController extends \CI_Controller
     /*************
      * Callbacks *
      *************/
-    public $beforeLanguage = "";
-    public $afterLanguage = "";
+    public $beforeLanguage = array();
+    public $afterLanguage = array();
 
-    public $beforeMethod = "";
-    public $afterMethod = "";
+    public $beforeMethod = array();
+    public $afterMethod = array();
 
-    public $beforeModel = "";
-    public $afterModel = "";
-
+    public $beforeModel = array();
+    public $afterModel = array();
 
     /**
      * Initiate the view loader class
@@ -485,19 +484,19 @@ class BaseController extends \CI_Controller
         }
     }
 
-    protected function _callback($callback)
+    /**
+     * Callback method
+     *
+     * This method calls all the callbacks, if they are defined, to eliminate
+     * the need for checking in each point of the BaseController if the code needs
+     * to be called.
+     */
+    protected function _callback(array $callback)
     {
-        $call = false;
-        if (is_array($callback)) {
-            if (method_exists($callback[0], $callback[1])) {
-                $call = true;
+        foreach ($callback as $c) {
+            if (method_exists($c[0], $c[1])) {
+                call_user_func($c);
             }
-        } elseif (function_exists($callback)) {
-            $call = true;
-        }
-
-        if ($call === true) {
-            call_user_func($callback);
         }
     }
 }
