@@ -48,12 +48,14 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basecontroller": "~0.2"
+    "slaxweb/ci-basecontroller": "~0.3"
   }
 }
 ```
 
 Then run **composer.phar install**. When finished, enable composer autoload in *application/config/config.php*.
+
+Next create the directory in *application/config/* called *slaxweb*, and copy the configuration file found in *install/slaxweb/basecontroller.php* to the newly created directory. Or use the installation script found in *install* directory.
 
 Congratulations, BaseController is installed.
 
@@ -378,6 +380,13 @@ If those are set, you will get this error message in your view data. On validati
 
 ChangeLog
 =========
+
+0.3.0
+-----
+
+* Change callback definition to arrays to support multiple callbacks at same point
+* Add config file for class name case sensitivity
+* Convert class names based on case sensitivity
 
 0.2.3
 -----
