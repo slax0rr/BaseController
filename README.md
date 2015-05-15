@@ -381,6 +381,11 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
+0.3.1
+-----
+
+* Sort the callback array before executing callbacks
+
 0.3.0
 -----
 
