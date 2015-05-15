@@ -515,6 +515,7 @@ class BaseController extends \CI_Controller
      */
     protected function _callback(array $callback)
     {
+        ksort($callback);
         foreach ($callback as $c) {
             if (method_exists($c[0], $c[1])) {
                 call_user_func($c);
