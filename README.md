@@ -381,6 +381,13 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
+0.4.0
+-----
+
+WARNING! This version breaks backward compatibility! See UPDATE0.4.0.md for more information
+
+* Enable multiple views to be loaded in single subView parameter
+
 0.3.1
 -----
 
