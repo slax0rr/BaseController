@@ -487,7 +487,7 @@ class BaseController extends \CI_Controller
             foreach ($view as $v) {
                 $this->viewData["subview_{$name}"] .= $this->_viewLoader->loadView(
                     $v["view"],
-                    isset($v["data"]) ? $v["data"] : array(),
+                    isset($v["data"]) ? $v["data"] : $this->viewData,
                     false,
                     true
                 );
