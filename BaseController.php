@@ -481,12 +481,16 @@ class BaseController extends \CI_Controller
     protected function _setSubviews()
     {
         foreach ($this->subViews as $name => $view) {
-            if (is_array($view) === true) {
-                $this->viewData["subview_{$name}"] =
-                    $this->_viewLoader->loadView($view["view"], $view["data"], false, true);
-            } else {
-                $this->viewData["subview_{$name}"] =
-                    $this->_viewLoader->loadView($view, $this->viewData, false, true);
+            if (isset($this->viewData["subview_{$name}"]) === false) {
+                $this->viewData["subview_{$name}"] = "";
+            }
+            foreach ($view as $v) {
+                $this->viewData["subview_{$name}"] .= $this->_viewLoader->loadView(
+                    $v["view"],
+                    isset($v["data"]) ? $v["data"] : array(),
+                    false,
+                    true
+                );
             }
         }
     }

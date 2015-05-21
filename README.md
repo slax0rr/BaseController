@@ -124,12 +124,25 @@ $this->view = "desired/view";
 Load sub-views
 --------------
 
-If you need to load subviews into your main view, you can do so, by assigning an array to the BaseController **subViews** property. The key name in the array is later used as the var in the main view, and the value in the array is the sub-view file name. Controller code:
+WARNING! Loading of subview has been changed in version 0.4.0. Please see **UPDATE0.4.0.md** for more information.
+
+If you need to load subviews into your main view, you can do so, by assigning a nested array to the BaseController **subViews** property. First level array holds the name of the sub-view parameter injected into view data, as the key. The value is an array of arrays. The bottom most array holds the view path and name, and any subview specific data with the key names, "view" and "data" respectively.
 ```PHP
-$this->subViews = array("name" => "subview/file");
+$this->subViews = array(
+    "name"  =>  array(
+        array(
+            "view"  =>  "subview/file",
+            "data"  =>  array(
+                "subviewParameter"  =>  "value"
+            )
+        )
+    )
+);
 ```
 
-Main view:
+Data is not a required paraeter and can be ommited.
+
+Display the subview in the main view:
 ```PHP
 <?php echo $subview_name; ?>
 ```
@@ -380,6 +393,13 @@ If those are set, you will get this error message in your view data. On validati
 
 ChangeLog
 =========
+
+0.4.0
+-----
+
+WARNING! This version breaks backward compatibility! See UPDATE0.4.0.md for more information
+
+* Enable multiple views to be loaded in single subView parameter
 
 0.3.1
 -----
