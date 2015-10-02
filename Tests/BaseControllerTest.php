@@ -127,12 +127,12 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
-     * Test CRUD - GET
+     * Test CRUD - RETRIEVE
      *
-     * The GET part of CRUD should only obtain data from the database
+     * The RETRIEVE part of CRUD should only obtain data from the database
      * and load it into the view data.
      */
-    public function testCrudGet()
+    public function testCrudRetrieve()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
             ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
@@ -156,4 +156,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             $c->viewData
         );
     }
+
+    /*
+     * Test CRUD - CREATE
 }
