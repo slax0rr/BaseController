@@ -20,7 +20,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $helperOutput = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(["_loadLanguage", "_loadModels"])
+            ->setMethods(array("_loadLanguage", "_loadModels"))
             ->getMock();
 
         $this->expectOutputRegex("~show_404~");
@@ -42,7 +42,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $existing404 = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(["_loadLanguage", "_loadViews", "_callback", "_loadModels"])
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
             ->getMock();
 
         $this->expectOutputRegex("~custom_404~");
@@ -66,7 +66,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $helperOutput = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(["_loadLanguage", "_loadViews", "_callback", "_loadModels"])
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
             ->getMock();
 
         $this->expectOutputRegex("~missingMethod_post~");
@@ -84,11 +84,11 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testExistingMethodRemap()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(["_loadLanguage", "_loadViews", "_callback", "_loadModels"])
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
             ->getMock();
 
-        $c->beforeMethod = ["beforeMethod"];
-        $c->afterMethod = ["afterMethod"];
+        $c->beforeMethod = array("beforeMethod");
+        $c->afterMethod = array("afterMethod");
 
         $this->expectOutputRegex("~testMethod~");
 
@@ -99,8 +99,8 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->expects($this->exactly(2))
             ->method("_callback")
             ->withConsecutive(
-                [$this->equalTo($c->beforeMethod)],
-                [$this->equalTo($c->afterMethod)]
+                array($this->equalTo($c->beforeMethod)),
+                array($this->equalTo($c->afterMethod))
             )
             ->willReturn(true);
         $c->_remap("testMethod");

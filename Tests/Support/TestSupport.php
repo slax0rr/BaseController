@@ -80,9 +80,9 @@ class CI_Router
  */
 class CI_Input
 {
-    public $server = [
+    public $server = array(
         "REQUEST_METHOD"    => "GET"
-    ];
+    );
 
     public function server($key)
     {
