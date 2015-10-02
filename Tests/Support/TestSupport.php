@@ -55,8 +55,8 @@ class CI_Config
  */
 class CI_Router
 {
-    public $class = "";
-    public $method = "";
+    public $class = "TestController";
+    public $method = "testMethod";
     public $directory = "";
 
     public function fetch_class()

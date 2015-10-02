@@ -94,7 +94,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->_remap("missingMethod");
     }
 
-    /**
+    /*
      * Test Existing Method Remap
      *
      * When everything is alright with the request, and the method exists,
@@ -124,5 +124,36 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn(true);
         $c->_remap("testMethod");
+    }
+
+    /*
+     * Test CRUD - GET
+     *
+     * The GET part of CRUD should only obtain data from the database
+     * and load it into the view data.
+     */
+    public function testCrudGet()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->TestController = $this->getMockBuilder("model")
+            ->setMethods(array("get"))
+            ->getMock();
+
+        $c->TestController->expects($this->once())
+            ->method("get")
+            ->with($this->equalTo(123))
+            ->willReturn(array("model" => "data"));
+
+        $c->viewData = array("existing" => "data");
+
+        $c->index(123);
+
+        $this->assertEquals(
+            array("existing" => "data", "_tableData" => array("model" => "data")),
+            $c->viewData
+        );
     }
 }
