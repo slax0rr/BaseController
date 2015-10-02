@@ -9,6 +9,26 @@ use \Mockery as m;
 class BaseControllerTest extends \PHPUnit_Framework_TestCase
 {
     /*
+     * Test Remap Loads Language
+     *
+     * Remap method must load the defined language
+     */
+    public function testRemapLanguage()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->getMock();
+
+        $this->expectOutputRegex("~testMethod~");
+
+        $c->expects($this->once())
+            ->method("_loadLanguage")
+            ->willReturn(true);
+
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Test Missing Method
      *
      * When a method it missing, and custom 404 error method is not defined
