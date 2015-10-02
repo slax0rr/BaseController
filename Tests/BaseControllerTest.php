@@ -87,6 +87,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(["_loadLanguage", "_loadViews", "_callback", "_loadModels"])
             ->getMock();
 
+        $c->beforeMethod = ["beforeMethod"];
+        $c->afterMethod = ["afterMethod"];
+
         $this->expectOutputRegex("~testMethod~");
 
         $c->expects($this->once())
@@ -95,8 +98,11 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         $c->expects($this->exactly(2))
             ->method("_callback")
+            ->withConsecutive(
+                [$this->equalTo($c->beforeMethod)],
+                [$this->equalTo($c->afterMethod)]
+            )
             ->willReturn(true);
-
         $c->_remap("testMethod");
     }
 }
