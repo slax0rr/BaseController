@@ -74,9 +74,30 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->expectOutputRegex("~custom_404~");
+
         $c->expects($this->once())
             ->method("_loadViews")
             ->willReturn(true);
+
         $c->_remap("custom404");
+    }
+
+    public function testExistingMethodRemap()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(["_loadLanguage", "_loadViews", "_callback", "_loadModels"])
+            ->getMock();
+
+        $this->expectOutputRegex("~testMethod~");
+
+        $c->expects($this->once())
+            ->method("_loadViews")
+            ->willReturn(true);
+
+        $c->expects($this->exactly(2))
+            ->method("_callback")
+            ->willReturn(true);
+
+        $c->_remap("testMethod");
     }
 }

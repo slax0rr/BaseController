@@ -21,6 +21,11 @@ class CI_Controller
     {
         echo "custom_404";
     }
+
+    public function testMethod()
+    {
+        echo "testMethod";
+    }
 }
 
 /**
