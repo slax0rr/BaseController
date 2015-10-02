@@ -37,24 +37,6 @@ class BaseController extends \CI_Controller
      */
     public $subViews = array();
     /**
-     * Include Header/Footer
-     *
-     * @var bool
-     */
-    public $include = true;
-    /**
-     * Header View
-     *
-     * @var string
-     */
-    public $head = "";
-    /**
-     * Footer View
-     *
-     * @var string
-     */
-    public $foot = "";
-    /**
      * Layout
      *
      * If set to false (default) the layout will not be used, if set to true,
@@ -367,14 +349,6 @@ class BaseController extends \CI_Controller
             $this->_setView();
         }
 
-        /**
-         * DEPRECATED
-         */
-        // Are header and footer set? And are they to be included?
-        if ($this->include === true && ($this->head !== "" || $this->foot !== "")) {
-            $this->_setTemplate();
-        }
-
         // Load language
         if ($this->langFile !== false) {
             $this->_setLanguage();
@@ -411,17 +385,6 @@ class BaseController extends \CI_Controller
         $this->view = strtolower(
             "{$this->router->fetch_directory()}{$this->_class}/{$this->_method}/main"
         );
-    }
-
-    /**
-     * Set the header and footer views
-     *
-     * !DEPRECATED!
-     */
-    protected function _setTemplate()
-    {
-        $this->_viewLoader->setHeaderView($this->head);
-        $this->_viewLoader->setFooterView($this->foot);
     }
 
     /**
