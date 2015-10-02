@@ -83,9 +83,23 @@ class CI_Input
     public $server = array(
         "REQUEST_METHOD"    => "GET"
     );
+    public $postData = array();
+
 
     public function server($key)
     {
         return $this->server[$key];
+    }
+
+    public function post($name = "")
+    {
+        if ($name === "") {
+            return $this->postData;
+        }
+        if (isset($this->postData[$name])) {
+            return $this->postData[$name];
+        } else {
+            return null;
+        }
     }
 }

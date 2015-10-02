@@ -159,4 +159,58 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
     /*
      * Test CRUD - CREATE
+     *
+     * The CREATE part of CRUD must retrieve data from POST, set the CREATE
+     * validation rules, store the data, and handle errors.
+     */
+    public function testCrudCreate()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->input->postData = array("test" => "data");
+        $c->afterCreate = "afterCreateView";
+
+        // Error object
+        $error = new \stdClass;
+
+        // Status mock object
+        $status = $this->getMockBuilder("status")
+            ->setMethods(array("error"))
+            ->getMock();
+
+        // Error mock method
+        $status->expects($this->exactly(3))
+            ->method("error")
+            ->will($this->onConsecutiveCalls($error, false, $error));
+
+        // Model mock object
+        $c->TestController = $this->getMockBuilder("model")
+            ->setMethods(array("insert"))
+            ->getMock();
+
+        // Insert mock method
+        $c->TestController->expects($this->exactly(3))
+            ->method("insert")
+            ->with($c->input->postData)
+            ->will($this->onConsecutiveCalls(true, $status, $status));
+
+        // Test - everything ok
+        $c->create_post();
+        $this->assertEquals($c->afterCreate, $c->view);
+        $this->assertEquals($c->viewData, array());
+
+        // Test - validation error
+        $error->message = "Validation Error Message";
+        $c->create_post();
+        $this->assertEquals($c->afterCreate, $c->view);
+        $this->assertEquals(array("createError" => "Validation Error Message"), $c->viewData);
+
+        // Test - create error
+        $error->message = "Create Error Message";
+        $c->create_post();
+        $this->assertEquals($c->afterCreate, $c->view);
+        $this->assertEquals(array("createError" => "Create Error Message"), $c->viewData);
+    }
 }
