@@ -16,6 +16,11 @@ class CI_Controller
         $this->router = new CI_Router;
         $this->input = new CI_Input;
     }
+
+    public function _404()
+    {
+        echo "custom_404";
+    }
 }
 
 /**
