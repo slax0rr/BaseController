@@ -2,36 +2,9 @@
 namespace SlaxWeb\BaseController;
 
 require_once("Support/TestSupport.php");
+require_once("Support/GlobalSupport.php");
 
 use \Mockery as m;
-
-$helperOutput = false;
-$existing404 = false;
-
-function show_404()
-{
-    global $helperOutput;
-
-    if ($helperOutput) {
-        echo "show_404";
-    }
-}
-
-function method_exists($class, $method)
-{
-    global $helperOutput;
-    global $existing404;
-
-    if ($helperOutput) {
-        echo "{$method}\n";
-    }
-
-    if ($method === "_404") {
-        return $existing404;
-    }
-
-    return \method_exists($class, $method);
-}
 
 class BaseControllerTest extends \PHPUnit_Framework_TestCase
 {
