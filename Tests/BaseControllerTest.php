@@ -165,13 +165,42 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCrudCreate()
     {
+        $this->_testCrud("create");
+    }
+
+    /*
+     * Test CRUD - Update
+     *
+     * The UPDATE part of CRUD must retrieve data from POST, assign rules,
+     * update the database, set the "afterUpdate" view, and check for errors.
+     */
+    public function testCrudUpdate()
+    {
+        $this->_testCrud("update");
+    }
+
+    /*
+     * Helper for CRUD testing
+     *
+     * All crud methods are tested similarly, combine tests in one method.
+     */
+    protected function _testCrud($method = "create")
+    {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
             ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
             ->getMock();
 
+        $ucMethod = ucfirst($method);
+        $afterMethodView = "after{$ucMethod}View";
+        $afterMethod = "after{$ucMethod}";
+        $methodRules = "{$method}Rules";
+
+        $crudMethod = "{$method}_post";
+        $modelMethod = ($method === "create") ? "insert" : $method;
+
         $c->input->postData = array("test" => "data");
-        $c->afterCreate = "afterCreateView";
-        $c->createRules = "createRules";
+        $c->{$afterMethod} = $afterMethodView;
+        $c->{$methodRules} = $methodRules;
 
         // Error object
         $error = new \stdClass;
@@ -188,31 +217,31 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         // Model mock object
         $c->TestController = $this->getMockBuilder("model")
-            ->setMethods(array("insert"))
+            ->setMethods(array($modelMethod))
             ->getMock();
 
-        // Insert mock method
+        // CRUD mock method
         $c->TestController->expects($this->exactly(3))
-            ->method("insert")
+            ->method($modelMethod)
             ->with($c->input->postData)
             ->will($this->onConsecutiveCalls(true, $status, $status));
 
         // Test - everything ok
-        $c->create_post();
-        $this->assertEquals($c->afterCreate, $c->view);
+        $c->{$crudMethod}();
+        $this->assertEquals($c->{$afterMethod}, $c->view);
         $this->assertEquals($c->viewData, array());
-        $this->assertEquals($c->createRules, $c->TestController->rules);
+        $this->assertEquals($c->{$methodRules}, $c->TestController->rules);
 
         // Test - validation error
         $error->message = "Validation Error Message";
-        $c->create_post();
-        $this->assertEquals($c->afterCreate, $c->view);
-        $this->assertEquals(array("createError" => "Validation Error Message"), $c->viewData);
+        $c->{$crudMethod}();
+        $this->assertEquals($c->{$afterMethod}, $c->view);
+        $this->assertEquals(array("{$method}Error" => "Validation Error Message"), $c->viewData);
 
-        // Test - create error
-        $error->message = "Create Error Message";
-        $c->create_post();
-        $this->assertEquals($c->afterCreate, $c->view);
-        $this->assertEquals(array("createError" => "Create Error Message"), $c->viewData);
+        // Test - update error
+        $error->message = "{$ucMethod} Error Message";
+        $c->{$crudMethod}();
+        $this->assertEquals($c->{$afterMethod}, $c->view);
+        $this->assertEquals(array("{$method}Error" => "{$ucMethod} Error Message"), $c->viewData);
     }
 }
