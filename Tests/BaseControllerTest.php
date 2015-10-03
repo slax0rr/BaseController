@@ -171,6 +171,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         $c->input->postData = array("test" => "data");
         $c->afterCreate = "afterCreateView";
+        $c->createRules = "createRules";
 
         // Error object
         $error = new \stdClass;
@@ -200,6 +201,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->create_post();
         $this->assertEquals($c->afterCreate, $c->view);
         $this->assertEquals($c->viewData, array());
+        $this->assertEquals($c->createRules, $c->TestController->rules);
 
         // Test - validation error
         $error->message = "Validation Error Message";
