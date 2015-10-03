@@ -169,7 +169,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
-     * Test CRUD - Update
+     * Test CRUD - UPDATE
      *
      * The UPDATE part of CRUD must retrieve data from POST, assign rules,
      * update the database, set the "afterUpdate" view, and check for errors.
@@ -177,6 +177,72 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testCrudUpdate()
     {
         $this->_testCrud("update");
+    }
+
+    /*
+     * Test CRUD - DELETE
+     *
+     * The DELETE part of crud expects an ID at input, and calls the delete
+     * on the database. After it sets the "afterDelete" view, and checks
+     * for errors.
+     */
+    public function testCrudDelete()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->afterDelete = "afterDeleteView";
+
+        // Error object
+        $error = new \stdClass;
+
+        // Status mock object
+        $status = $this->getMockBuilder("status")
+            ->setMethods(array("error"))
+            ->getMock();
+
+        // Error mock method
+        $status->expects($this->once())
+            ->method("error")
+            ->willReturn($error);
+
+        // Model mock object
+        $c->TestController = $this->getMockBuilder("model")
+            ->setMethods(array("delete"))
+            ->getMock();
+
+        // Delete mock method
+        $c->TestController->expects($this->exactly(3))
+            ->method("delete")
+            ->with(123)
+            ->will($this->onConsecutiveCalls(true, false, $status));
+
+        // Mock language helper
+        $c->lang = $this->getMockBuilder("languageHelper")
+            ->setMethods(array("line"))
+            ->getMock();
+
+        $c->lang->expects($this->once())
+            ->method("line")
+            ->with("error_delete_generic")
+            ->willReturn("Generic Delete Error Message");
+
+        // Test - everything ok
+        $c->delete_post(123);
+        $this->assertEquals($c->afterDelete, $c->view);
+        $this->assertEquals($c->viewData, array());
+
+        // Test - unknown error
+        $c->delete_post(123);
+        $this->assertEquals($c->afterDelete, $c->view);
+        $this->assertEquals(array("deleteError" => "Generic Delete Error Message"), $c->viewData);
+
+        // Test - delete error
+        $error->message = "Delete Error Message";
+        $c->delete_post(123);
+        $this->assertEquals($c->afterDelete, $c->view);
+        $this->assertEquals(array("deleteError" => "Delete Error Message"), $c->viewData);
     }
 
     /*
@@ -238,7 +304,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($c->{$afterMethod}, $c->view);
         $this->assertEquals(array("{$method}Error" => "Validation Error Message"), $c->viewData);
 
-        // Test - update error
+        // Test - crud error
         $error->message = "{$ucMethod} Error Message";
         $c->{$crudMethod}();
         $this->assertEquals($c->{$afterMethod}, $c->view);
