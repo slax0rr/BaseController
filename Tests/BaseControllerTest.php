@@ -364,6 +364,41 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test Set View
+     *
+     * When "view" property is an empty string the BaseController should
+     * assemble the default view path.
+     */
+    public function testSetView()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->view = "";
+        $c->layout = "testLayout";
+        $c->langFile = false;
+        $c->router->directory = "testDirectory/";
+
+        $loader = $this->getMockBuilder("ViewLoader")
+            ->setMethods(array("loadView"))
+            ->getMock();
+
+        $loader->expects($this->exactly(2))
+            ->method("loadView")
+            ->withConsecutive(
+                array("testdirectory/testcontroller/testmethod/main", $c->viewData, true, true),
+                array("testLayout", array("mainView" => "testView Loaded"))
+            )
+            ->willReturn("testView Loaded");
+
+        $c->setViewLoader($loader);
+
+        $this->expectOutputRegex("~testMethod~");
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.
