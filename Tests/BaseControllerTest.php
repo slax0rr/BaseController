@@ -399,6 +399,94 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test Set Language
+     *
+     * When property "langFile" is not false, BaseController must automatically
+     * load the correct language file, and set language strings into the view
+     * data. If property "langPrefix" is not set, it must use the method name
+     * as prefix, and handle additional prefixes in the "additionalPrefixes"
+     * property.
+     */
+    public function testSetLanguage()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_callback", "_loadModels"))
+            ->getMock();
+
+        $c->view = "testView";
+        $c->layout = "testLayout";
+        $c->router->directory = "testDirectory/";
+        $c->beforeLanguage = array("beforeLanguage");
+        $c->afterLanguage = array("afterLanguage");
+        $c->beforeMethod = array("beforeMethod");
+        $c->afterMethod = array("afterMethod");
+        $c->langFile = true;
+        $c->language = "lang";
+
+        $c->expects($this->exactly(12))
+            ->method("_callback")
+            ->withConsecutive(
+                array($this->equalTo($c->beforeLanguage)),
+                array($this->equalTo($c->afterLanguage)),
+                array($this->equalTo($c->beforeMethod)),
+                array($this->equalTo($c->afterMethod))
+            )
+            ->willReturn(true);
+
+        $loader = $this->getMockBuilder("ViewLoader")
+            ->setMethods(array("loadView", "setLanguageStrings"))
+            ->getMock();
+
+        $loader->expects($this->exactly(6))
+            ->method("loadView")
+            ->withConsecutive(
+                array($c->view, $c->viewData, true, true),
+                array("testLayout", array("mainView" => "testView Loaded"))
+            )
+            ->willReturn("testView Loaded");
+
+        $loader->expects($this->exactly(5))
+            ->method("setLanguageStrings")
+            ->withConsecutive(
+                array("testmethod_"),
+                array("testprefix_"),
+                array("testmethod_"),
+                array("prefix1_"),
+                array("prefix2_")
+            );
+        $c->setViewLoader($loader);
+
+        $c->lang = $this->getMockBuilder("Language")
+            ->setMethods(array("load"))
+            ->getMock();
+
+        $c->lang->expects($this->exactly(5))
+            ->method("load")
+            ->withConsecutive(
+                array("TestController", "lang"),
+                array("TestLang", "lang"),
+                array("TestController", "lang"),
+                array("TestLanguage1", "lang"),
+                array("TestLanguage2", "lang")
+            );
+
+        $this->expectOutputRegex("~testMethod~");
+        // test with default language file, and no additional prefixes
+        $c->_remap("testMethod");
+
+        // Test custom language file and custom language key prefix
+        $c->langFile = "TestLang";
+        $c->langPrefix = "testprefix_";
+        $c->_remap("testMethod");
+
+        // test multiple language files, and additional prefixes
+        $c->langFile = array("TestController", "TestLanguage1", "TestLanguage2");
+        $c->additionalPrefixes = array("prefix1_", "prefix2_");
+        $c->langPrefix = "";
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.
