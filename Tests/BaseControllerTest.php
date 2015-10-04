@@ -487,6 +487,85 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test Set SubViews
+     *
+     * Subview array has to be parsed, and each subview added as a separate
+     * view data property.
+     */
+    public function testSetSubview()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->view = "testView";
+        $c->layout = false;
+        $c->langFile = false;
+        $c->subViews = array(
+            "testSubView1"  =>  array(
+                array("view" => "view1"),
+                array("view" => "view2", "data" => array("subviewTest" => "data"))
+            ),
+            "testSubView2"  =>  array(
+                array("view" => "view1")
+            )
+        );
+        $c->viewData = array("testData" => "data");
+
+        $loader = $this->getMockBuilder("ViewLoader")
+            ->setMethods(array("loadView"))
+            ->getMock();
+
+        $loader->expects($this->exactly(4))
+            ->method("loadView")
+            ->withConsecutive(
+                array("view1", array("testData" => "data", "subview_testSubView1" => ""), false, true),
+                array("view2", array("subviewTest" => "data"), false, true),
+                array(
+                    "view1",
+                    array(
+                        "testData"              =>  "data",
+                        "subview_testSubView1"  =>  "testSubView1 view1testSubView1 view2",
+                        "subview_testSubView2"  =>  ""
+                    ),
+                    false,
+                    true
+                ),
+                array(
+                    "testView",
+                    array(
+                        "testData"              =>  "data",
+                        "subview_testSubView1"  =>  "testSubView1 view1testSubView1 view2",
+                        "subview_testSubView2"  =>  "testSubView2 view1"
+                    ),
+                    true,
+                    true
+                )
+            )
+            ->will(
+                $this->onConsecutiveCalls(
+                    "testSubView1 view1",
+                    "testSubView1 view2",
+                    "testSubView2 view1",
+                    "testView Loaded"
+                )
+            );
+
+        $c->setViewLoader($loader);
+
+        $c->output = $this->getMockBuilder("Output")
+            ->setMethods(array("set_output"))
+            ->getMock();
+
+        $c->output->expects($this->exactly(1))
+            ->method("set_output")
+            ->with("testView Loaded");
+
+        $this->expectOutputRegex("~testMethod~");
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.
