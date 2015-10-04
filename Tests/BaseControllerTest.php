@@ -311,6 +311,59 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test Load Views
+     *
+     * Load views checks if it needs to load any views, if it needs to
+     * load the view, and based on the "layout" property put it to output,
+     * or load it as view data into the layout.
+     */
+    public function testLoadViews()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->getMock();
+
+        $c->view = "testView";
+        $c->layout = false;
+        $c->langFile = false;
+
+        $loader = $this->getMockBuilder("ViewLoader")
+            ->setMethods(array("loadView"))
+            ->getMock();
+
+        $loader->expects($this->exactly(3))
+            ->method("loadView")
+            ->withConsecutive(
+                array($c->view, $c->viewData, true, true),
+                array($c->view, $c->viewData, true, true),
+                array("testLayout", array("mainView" => "testView Loaded"))
+            )
+            ->willReturn("testView Loaded");
+
+        $c->setViewLoader($loader);
+
+        $c->output = $this->getMockBuilder("Output")
+            ->setMethods(array("set_output"))
+            ->getMock();
+
+        $c->output->expects($this->exactly(1))
+            ->method("set_output")
+            ->with("testView Loaded");
+
+        // test view is loaded and put to output
+        $this->expectOutputRegex("~testMethod~");
+        $c->_remap("testMethod");
+
+        // test view is loaded into the layout
+        $c->layout = "testLayout";
+        $c->_remap("testMethod");
+
+        // test nothing is loaded when intended
+        $c->view = false;
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.

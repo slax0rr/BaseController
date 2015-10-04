@@ -12,4 +12,9 @@ class ControllerOverride extends \SlaxWeb\BaseController\BaseController
     {
         $this->_loadModels();
     }
+
+    public function setViewLoader($loader)
+    {
+        $this->_viewLoader = $loader;
+    }
 }
