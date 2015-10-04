@@ -9,6 +9,10 @@ $helperOutput = false;
  * Control if method_exists should return true for a custom _404 method
  */
 $existing404 = false;
+/**
+ * Control if file_xists should return true or false
+ */
+$fileExists = true;
 
 /**
  * Override CodeIgniter show_404 function
@@ -38,4 +42,16 @@ function method_exists($class, $method)
     }
 
     return \method_exists($class, $method);
+}
+
+function file_exists($path)
+{
+    global $helperOutput;
+    global $fileExists;
+
+    if ($helperOutput) {
+        echo "fileExists: {$path}";
+    }
+
+    return $fileExists;
 }

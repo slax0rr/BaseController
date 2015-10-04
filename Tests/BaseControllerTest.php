@@ -3,6 +3,7 @@ namespace SlaxWeb\BaseController;
 
 require_once("Support/TestSupport.php");
 require_once("Support/GlobalSupport.php");
+require_once("Support/ControllerOverride.php");
 
 use \Mockery as m;
 
@@ -243,6 +244,70 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->delete_post(123);
         $this->assertEquals($c->afterDelete, $c->view);
         $this->assertEquals(array("deleteError" => "Delete Error Message"), $c->viewData);
+    }
+
+    /*
+     * Test Model Autoload
+     *
+     * The model autoloader has to call "beforeModel", and "afterModel"
+     * callbacks at the beginning and the end of method execution.
+     * It checks if "models" property has not been set to false, or not set
+     * at all, if it is indeed set, it first tries to load the model that
+     * has teh same name as the controller, and if "models" property
+     * is an array, it itterates through it, and loads all defined models
+     * in that array.
+     */
+    public function testModelAutoload()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_callback"))
+            ->getMock();
+
+        define("APPPATH", "mockPath/");
+        global $helperOutput;
+        global $fileExists;
+        $c->beforeModel = array("beforeModel");
+        $c->afterModel = array("afterModel");
+        $c->models = array("CustomModel1", "CustomModel2");
+
+        $c->expects($this->exactly(6))
+            ->method("_callback")
+            ->withConsecutive(
+                array($this->equalTo($c->beforeModel)),
+                array($this->equalTo($c->afterModel)),
+                array($this->equalTo($c->beforeModel)),
+                array($this->equalTo($c->afterModel)),
+                array($this->equalTo($c->beforeModel)),
+                array($this->equalTo($c->afterModel))
+            );
+
+        $c->load = $this->getMockBuilder("loaderOverride")
+            ->setMethods(array("model"))
+            ->getMock();
+
+        $c->load->expects($this->exactly(5))
+            ->method("model")
+            ->withConsecutive(
+                array($this->equalTo("TestController_model"), $this->equalTo("TestController")),
+                array($this->equalTo("CustomModel1_model"), $this->equalTo("CustomModel1")),
+                array($this->equalTo("CustomModel2_model"), $this->equalTo("CustomModel2")),
+                array($this->equalTo("CustomModel1_model"), $this->equalTo("CustomModel1")),
+                array($this->equalTo("CustomModel2_model"), $this->equalTo("CustomModel2"))
+            );
+
+        $this->expectOutputRegex("~mockPath/models/TestController_model.php$~");
+
+        $helperOutput = true;
+        $fileExists = true;
+        $c->loadModels();
+
+        $helperOutput = false;
+        $fileExists = false;
+        $c->loadModels();
+
+        $fileExists = true;
+        $c->models = false;
+        $c->loadModels();
     }
 
     /*
