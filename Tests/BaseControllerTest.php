@@ -566,6 +566,31 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test callback
+     *
+     * Callback needs to sort the callbacks by key, check if the method exists,
+     * and call it.
+     */
+    public function testCallback()
+    {
+        $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
+            ->setMethods(array("_loadLanguage", "_loadViews", "_loadModels"))
+            ->getMock();
+
+        global $helperOutput;
+        $helperOutput = true;
+
+        $c->beforeMethod = array(
+            100 =>  array($c, "callback1"),
+            50  =>  array($c, "testCallbackOutput"),
+            99  =>  array($c, "callback3")
+        );
+
+        $this->expectOutputRegex("~testCallbackOutput\nCallback called\ncallback3\ncallback1\n~");
+        $c->_remap("testMethod");
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.

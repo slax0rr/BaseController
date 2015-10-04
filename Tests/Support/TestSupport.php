@@ -26,6 +26,16 @@ class CI_Controller
     {
         echo "testMethod";
     }
+
+    /*
+     * Callback output
+     *
+     * Helper method to check if callback gets called when it exists.
+     */
+    public function testCallbackOutput()
+    {
+        echo "Callback called\n";
+    }
 }
 
 /**
