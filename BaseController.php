@@ -82,6 +82,12 @@ class BaseController extends \CI_Controller
      */
     public $additionalPrefixes = array();
     /**
+     * Controller class
+     *
+     * @var string
+     */
+    protected $_class = "";
+    /**
      * Controller method
      *
      * @var string
@@ -133,12 +139,6 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $afterDelete = "";
-    /**
-     * Controller class
-     *
-     * @var string
-     */
-    protected $_class = "";
 
     /*************
      * Callbacks *
@@ -152,13 +152,19 @@ class BaseController extends \CI_Controller
     public $beforeModel = array();
     public $afterModel = array();
 
+    /**********
+     * Config *
+     **********/
+    protected $_autoModel;
+    protected $_mandatoryModel;
+
     /**
      * Initiate the view loader class
      */
     public function __construct()
     {
         parent::__construct();
-        $this->load->config("slaxweb/basecontroller");
+        $this->_loadConfig();
         switch ($this->config->item("controller_class_case")) {
             case 0:
                 $this->_class = $this->router->fetch_class();
@@ -175,7 +181,9 @@ class BaseController extends \CI_Controller
         }
 
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
-        $this->_loadModels();
+        if ($this->_autoModel === true) {
+            $this->_loadModels();
+        }
     }
 
     /**
@@ -316,16 +324,16 @@ class BaseController extends \CI_Controller
     {
         $this->_callback($this->beforeModel);
 
-        if (isset($this->models) === false || $this->models !== false) {
-            $model = ucfirst("{$this->_class}_model");
-            if (file_exists(APPPATH . "models/{$model}.php")) {
-                $this->load->model($model, $this->_class);
-            }
+        $model = ucfirst("{$this->_class}_model");
+        if (file_exists(APPPATH . "models/{$model}.php")) {
+            $this->load->model($model, $this->_class);
+        } elseif ($this->_mandatoryModel === true) {
+            $this->_showError("Model ({$model}) does not exist.", 404);
+        }
 
-            if (isset($this->models) === true && is_array($this->models)) {
-                foreach ($this->models as $m) {
-                    $this->load->model("{$m}_model", $m);
-                }
+        if (isset($this->models) === true && is_array($this->models)) {
+            foreach ($this->models as $m) {
+                $this->load->model("{$m}_model", $m);
             }
         }
 
@@ -488,5 +496,39 @@ class BaseController extends \CI_Controller
                 call_user_func($c);
             }
         }
+    }
+
+    /**
+     * Load config
+     *
+     * Load the configuration and set its values to protected properties.
+     */
+    protected function _loadConfig()
+    {
+        // load the config file
+        $this->load->config("slaxweb/basecontroller");
+
+        // set model config values
+        $this->_autoModel = $this->config->item("enable_model_autoload");
+        if (is_bool($this->_autoModel) === false) {
+            $this->_showError("Model autoload config value value needs to be bool.");
+            $this->_autoModel = true;
+        }
+        $this->_mandatoryModel = $this->config->its("mandatory_model");
+        if (is_bool($this->_mandatoryModel) === false) {
+            $this->_show_error("Mandatory model config value type needs to be bool.");
+            $this->_mandatoryModel = false;
+        }
+    }
+
+    /**
+     * Display error message
+     *
+     * Displays an error message, and logs it.
+     */
+    protected function _showError($message, $code = 500, $logLevel = "error")
+    {
+        log_message($logLevel, "{$message} ({$code})");
+        show_error($message, $code);
     }
 }
