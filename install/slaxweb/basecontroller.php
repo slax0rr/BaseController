@@ -16,6 +16,7 @@ $config["controller_class_case"] = 0;
  * Autoload models
  *
  * Available values: true/false
+ * Default: true
  */
 $config["enable_model_autoload"] = true;
 
@@ -47,6 +48,7 @@ $config["enable_language_autoload"] = true;
  * model, or should missing models not throw an error?
  *
  * Available values: true/false
+ * Default: false
  */
 $config["mandatory_model"] = false;
 
