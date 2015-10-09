@@ -13,7 +13,9 @@ class BaseController extends \CI_Controller
     /**
      * View name
      *
-     * If left empty it will load the view: "controller/method/main", set to false to disable loading
+     * If left empty it will load the default view
+     *
+     * DEPRECATED: set to false to disable loading
      *
      * @var string
      */
@@ -167,6 +169,8 @@ class BaseController extends \CI_Controller
      **********/
     protected $_autoModel;
     protected $_mandatoryModel;
+    protected $_loadView;
+    protected $_defaultView;
 
     /**
      * Initiate the view loader class
@@ -358,7 +362,7 @@ class BaseController extends \CI_Controller
     protected function _loadViews()
     {
         // should we load the views?
-        if ($this->view === false) {
+        if ($this->_loadView === false && $this->view === false) {
             return true;
         }
 
@@ -400,9 +404,10 @@ class BaseController extends \CI_Controller
      */
     protected function _setView()
     {
-        $this->view = strtolower(
-            "{$this->router->fetch_directory()}{$this->_class}/{$this->_method}/main"
-        );
+        $view = str_replace("{controllerDirectory}", $this->router->fetch_directory(), $this->_defaultView);
+        $view = str_replace("{controllerName}", $this->_class, $view);
+        $view = str_replace("{controllerMethod}", $this->_method, $view);
+        $this->view = strtolower($view);
     }
 
     /**
@@ -528,6 +533,17 @@ class BaseController extends \CI_Controller
         if (is_bool($this->_mandatoryModel) === false) {
             $this->_showError("Mandatory model config value type needs to be bool.");
             $this->_mandatoryModel = false;
+        }
+
+        // set view config values
+        $this->_loadView = $this->config->item("enable_view_autoload");
+        if (is_bool($this->_loadView) === false) {
+            $this->_showError("View autoload config value needs to be bool.");
+            $this->_loadView = true;
+        }
+        $this->_defaultView = $this->config->item("default_view");
+        if (empty($this->_defaultView)) {
+            $this->_defaultView = "{controllerDirectory}/{controllerName}/{methodName}/main";
         }
     }
 

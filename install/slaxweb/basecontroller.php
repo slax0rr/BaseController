@@ -24,6 +24,7 @@ $config["enable_model_autoload"] = true;
  * Autoload views
  *
  * Available values: true/false
+ * Default: true
  */
 $config["enable_view_autoload"] = true;
 
@@ -64,6 +65,8 @@ $config["mandatory_model"] = false;
  * - {controllerDirectory} - replaced by the sub-directory the controller is in
  * - {controllerName} - replaced by the current controller name
  * - {methodName} - replaced by the current method name
+ * 
+ * Default: {controllerDirectory}/{controllerName}/{methodName}/main
  */
 $config["default_view"] = "{controllerDirectory}/{controllerName}/{methodName}/main";
 
