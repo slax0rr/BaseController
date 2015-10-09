@@ -667,46 +667,43 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         $c->delayedConstruct();
 
-        $c->expects($this->exactly(2))
+        $c->expects($this->exactly(3))
             ->method("_showError")
             ->withConsecutive(
                 array($this->equalTo("Model autoload config value needs to be bool.")),
-                array($this->equalTo("Mandatory model config value type needs to be bool."))
+                array($this->equalTo("Mandatory model config value type needs to be bool.")),
+                array($this->equalTo("View autoload config value needs to be bool."))
             );
 
         $conf = Registry::get("CI_Config");
 
-        $conf->config["enable_model_autoload"] = true;
-        $conf->config["mandatory_model"] = false;
-        $c->_autoModel = null;
-        $c->_mandatoryModel = null;
-        $c->loadConfig();
-        $this->assertTrue($c->_autoModel);
-        $this->assertFalse($c->_mandatoryModel);
-
         $conf->config["enable_model_autoload"] = false;
         $conf->config["mandatory_model"] = true;
+        $conf->config["enable_view_autoload"] = false;
+        $conf->config["default_view"] = "{controllerName}/main";
         $c->_autoModel = null;
         $c->_mandatoryModel = null;
+        $c->_loadView = null;
+        $c->_defaultView = null;
         $c->loadConfig();
         $this->assertFalse($c->_autoModel);
         $this->assertTrue($c->_mandatoryModel);
+        $this->assertFalse($c->_loadView);
+        $this->assertEquals($c->_defaultView, "{controllerName}/main");
 
         $conf->config["enable_model_autoload"] = "test";
-        $conf->config["mandatory_model"] = true;
-        $c->_autoModel = null;
-        $c->_mandatoryModel = null;
-        $c->loadConfig();
-        $this->assertTrue($c->_autoModel);
-        $this->assertTrue($c->_mandatoryModel);
-
-        $conf->config["enable_model_autoload"] = true;
         $conf->config["mandatory_model"] = "test";
+        $conf->config["enable_view_autoload"] = "test";
+        $conf->config["default_view"] = "";
         $c->_autoModel = null;
         $c->_mandatoryModel = null;
+        $c->_loadView = null;
+        $c->_defaultView = null;
         $c->loadConfig();
         $this->assertTrue($c->_autoModel);
         $this->assertFalse($c->_mandatoryModel);
+        $this->assertTrue($c->_loadView);
+        $this->assertEquals($c->_defaultView, "{controllerDirectory}{controllerName}/{methodName}/main");
     }
 
     /*
