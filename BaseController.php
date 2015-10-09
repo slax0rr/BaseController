@@ -15,8 +15,6 @@ class BaseController extends \CI_Controller
      *
      * If left empty it will load the default view
      *
-     * DEPRECATED: set to false to disable loading
-     *
      * @var string
      */
     public $view = "";
@@ -362,7 +360,7 @@ class BaseController extends \CI_Controller
     protected function _loadViews()
     {
         // should we load the views?
-        if ($this->_loadView === false && $this->view === false) {
+        if ($this->_loadView === false) {
             return true;
         }
 
@@ -404,9 +402,10 @@ class BaseController extends \CI_Controller
      */
     protected function _setView()
     {
+        var_dump($this->_defaultView);
         $view = str_replace("{controllerDirectory}", $this->router->fetch_directory(), $this->_defaultView);
         $view = str_replace("{controllerName}", $this->_class, $view);
-        $view = str_replace("{controllerMethod}", $this->_method, $view);
+        $view = str_replace("{methodName}", $this->_method, $view);
         $this->view = strtolower($view);
     }
 
@@ -551,7 +550,7 @@ class BaseController extends \CI_Controller
             $this->_defaultView = $this->config->item("default_view");
         }
         if (empty($this->_defaultView)) {
-            $this->_defaultView = "{controllerDirectory}/{controllerName}/{methodName}/main";
+            $this->_defaultView = "{controllerDirectory}{controllerName}/{methodName}/main";
         }
     }
 

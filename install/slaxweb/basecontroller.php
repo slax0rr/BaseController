@@ -66,9 +66,9 @@ $config["mandatory_model"] = false;
  * - {controllerName} - replaced by the current controller name
  * - {methodName} - replaced by the current method name
  * 
- * Default: {controllerDirectory}/{controllerName}/{methodName}/main
+ * Default: {controllerDirectory}{controllerName}/{methodName}/main
  */
-$config["default_view"] = "{controllerDirectory}/{controllerName}/{methodName}/main";
+$config["default_view"] = "{controllerDirectory}{controllerName}/{methodName}/main";
 
 /**
  * Mandatory language
