@@ -169,6 +169,7 @@ class BaseController extends \CI_Controller
     protected $_mandatoryModel = null;
     protected $_loadView = null;
     protected $_defaultView = null;
+    protected $_loadLayout = null;
 
     /**
      * Initiate the view loader class
@@ -388,7 +389,7 @@ class BaseController extends \CI_Controller
         }
 
         // If there is no layout, set everything loaded to this point to output
-        if ($this->layout === false) {
+        if ($this->_loadLayout === false) {
             $this->output->set_output($data["mainView"]);
         } else {
             // Load the layout
@@ -551,6 +552,15 @@ class BaseController extends \CI_Controller
         }
         if (empty($this->_defaultView)) {
             $this->_defaultView = "{controllerDirectory}{controllerName}/{methodName}/main";
+        }
+
+        // set layout config values
+        if ($this->_loadLayout === null) {
+            $this->_loadLayout = $this->config->item("enable_layout_autoload");
+        }
+        if (is_bool($this->_loadLayout) === false) {
+            $this->_showError("Layout autoload config value needs to be bool.");
+            $this->_loadLayout = true;
         }
     }
 

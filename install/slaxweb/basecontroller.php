@@ -32,6 +32,7 @@ $config["enable_view_autoload"] = true;
  * Template layout
  *
  * Available values: true/false
+ * Default: true
  */
 $config["enable_layout_autoload"] = false;
 
