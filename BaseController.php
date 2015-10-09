@@ -521,7 +521,7 @@ class BaseController extends \CI_Controller
         // set model config values
         $this->_autoModel = $this->config->item("enable_model_autoload");
         if (is_bool($this->_autoModel) === false) {
-            $this->_showError("Model autoload config value value needs to be bool.");
+            $this->_showError("Model autoload config value needs to be bool.");
             $this->_autoModel = true;
         }
         $this->_mandatoryModel = $this->config->item("mandatory_model");
