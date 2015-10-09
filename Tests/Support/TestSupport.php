@@ -78,7 +78,7 @@ class CI_Config
         "enable_layout_autoload"    =>  false,
         "enable_language_autoload"  =>  true,
         "mandatory_model"           =>  false,
-        "default_view"              =>  "{controllerDirectory}/{controllerName}/{methodName}/main",
+        "default_view"              =>  "{controllerDirectory}{controllerName}/{methodName}/main",
         "mandatory_language"        =>  true
     );
 

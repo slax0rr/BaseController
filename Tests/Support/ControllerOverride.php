@@ -18,6 +18,11 @@ class ControllerOverride extends \SlaxWeb\BaseController\BaseController
         }
     }
 
+    public function __set($param, $value)
+    {
+        $this->{$param} = $value;
+    }
+
     public function loadModels()
     {
         $this->_loadModels();

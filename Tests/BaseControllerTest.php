@@ -267,18 +267,26 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->delayedConstruct();
 
         $c->models = array("CustomModel1", "CustomModel2");
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->delayedConstruct();
 
         $conf = Registry::get("CI_Config");
         $conf->config["enable_model_autoload"] = false;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->delayedConstruct();
 
         $c->models = false;
         $conf->config["enable_model_autoload"] = true;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->delayedConstruct();
 
         $c->models = true;
         $conf->config["enable_model_autoload"] = false;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->delayedConstruct();
     }
 
@@ -398,7 +406,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->_remap("testMethod");
 
         // test nothing is loaded when intended
-        $c->view = false;
+        $c->_loadView = false;
         $c->_remap("testMethod");
     }
 
@@ -411,7 +419,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetView()
     {
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_loadLanguage", "_callback", "_loadModels", "_loadConfig"))
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
             ->getMock();
         $c->delayedConstruct();
 
@@ -670,24 +678,32 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         $conf->config["enable_model_autoload"] = true;
         $conf->config["mandatory_model"] = false;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->loadConfig();
         $this->assertTrue($c->_autoModel);
         $this->assertFalse($c->_mandatoryModel);
 
         $conf->config["enable_model_autoload"] = false;
         $conf->config["mandatory_model"] = true;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->loadConfig();
         $this->assertFalse($c->_autoModel);
         $this->assertTrue($c->_mandatoryModel);
 
         $conf->config["enable_model_autoload"] = "test";
         $conf->config["mandatory_model"] = true;
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->loadConfig();
         $this->assertTrue($c->_autoModel);
         $this->assertTrue($c->_mandatoryModel);
 
         $conf->config["enable_model_autoload"] = true;
         $conf->config["mandatory_model"] = "test";
+        $c->_autoModel = null;
+        $c->_mandatoryModel = null;
         $c->loadConfig();
         $this->assertTrue($c->_autoModel);
         $this->assertFalse($c->_mandatoryModel);
