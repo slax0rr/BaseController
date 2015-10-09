@@ -303,20 +303,20 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testModelLoad()
     {
+        global $helperOutput;
+        global $fileExists;
         define("APPPATH", "mockPath/");
 
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_callback"))
+            ->setMethods(array("_callback", "_showError"))
             ->getMock();
         $c->delayedConstruct();
 
-        global $helperOutput;
-        global $fileExists;
         $c->beforeModel = array("beforeModel");
         $c->afterModel = array("afterModel");
         $c->models = array("CustomModel1", "CustomModel2");
 
-        $c->expects($this->exactly(6))
+        $c->expects($this->exactly(8))
             ->method("_callback")
             ->withConsecutive(
                 array($this->equalTo($c->beforeModel)),
@@ -340,6 +340,10 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
                 array($this->equalTo("TestController_model"), $this->equalTo("TestController"))
             );
 
+        $c->expects($this->once())
+            ->method("_showError")
+            ->with("Model (TestController_model) does not exist.", 404, "error");
+
         $this->expectOutputRegex("~mockPath/models/TestController_model.php$~");
 
         $helperOutput = true;
@@ -350,9 +354,14 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $fileExists = false;
         $c->loadModels();
 
+        $helperOutput = true;
+        $fileExists = false;
+        $c->models = true;
+        $c->_mandatoryModel = true;
+        $c->loadModels();
+
         $helperOutput = false;
         $fileExists = true;
-        $c->models = true;
         $c->loadModels();
     }
 
