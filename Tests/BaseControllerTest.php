@@ -1,7 +1,7 @@
 <?php
 namespace SlaxWeb\BaseController;
 
-use SlaxWeb\Registry\Container as Registry;
+use Registry;
 
 require_once("Support/TestSupport.php");
 require_once("Support/GlobalSupport.php");

@@ -1,5 +1,20 @@
 <?php
-use SlaxWeb\Registry\Container as Registry;
+/**
+ * Object registry
+ */
+class Registry
+{
+    protected static $_container = [];
+
+    public static function get($class)
+    {
+        if (isset(self::$_container[$class]) === false) {
+            self::$_container[$class] = new $class;
+        }
+
+        return self::$_container[$class];
+    }
+}
 
 /**
  * Mock CI_Controller class
