@@ -524,24 +524,32 @@ class BaseController extends \CI_Controller
         $this->load->config("slaxweb/basecontroller");
 
         // set model config values
-        $this->_autoModel = $this->config->item("enable_model_autoload");
+        if ($this->_autoModel === null) {
+            $this->_autoModel = $this->config->item("enable_model_autoload");
+        }
         if (is_bool($this->_autoModel) === false) {
             $this->_showError("Model autoload config value needs to be bool.");
             $this->_autoModel = true;
         }
-        $this->_mandatoryModel = $this->config->item("mandatory_model");
+        if ($this->_mandatoryModel === null) {
+            $this->_mandatoryModel = $this->config->item("mandatory_model");
+        }
         if (is_bool($this->_mandatoryModel) === false) {
             $this->_showError("Mandatory model config value type needs to be bool.");
             $this->_mandatoryModel = false;
         }
 
         // set view config values
-        $this->_loadView = $this->config->item("enable_view_autoload");
+        if ($this->_loadView === null) {
+            $this->_loadView = $this->config->item("enable_view_autoload");
+        }
         if (is_bool($this->_loadView) === false) {
             $this->_showError("View autoload config value needs to be bool.");
             $this->_loadView = true;
         }
-        $this->_defaultView = $this->config->item("default_view");
+        if ($this->_defaultView === null) {
+            $this->_defaultView = $this->config->item("default_view");
+        }
         if (empty($this->_defaultView)) {
             $this->_defaultView = "{controllerDirectory}/{controllerName}/{methodName}/main";
         }
