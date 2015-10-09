@@ -82,6 +82,16 @@ class BaseController extends \CI_Controller
      */
     public $additionalPrefixes = array();
     /**
+     * Models
+     *
+     * Define models to load.
+     *
+     * DEPRECATED: If set to false, model autoloading is disabled.
+     *
+     * @var mixed
+     */
+    public $models = true;
+    /**
      * Controller class
      *
      * @var string
@@ -181,7 +191,7 @@ class BaseController extends \CI_Controller
         }
 
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
-        if ($this->_autoModel === true) {
+        if ($this->_autoModel === true && $this->models !== false) {
             $this->_loadModels();
         }
     }
@@ -514,9 +524,9 @@ class BaseController extends \CI_Controller
             $this->_showError("Model autoload config value value needs to be bool.");
             $this->_autoModel = true;
         }
-        $this->_mandatoryModel = $this->config->its("mandatory_model");
+        $this->_mandatoryModel = $this->config->item("mandatory_model");
         if (is_bool($this->_mandatoryModel) === false) {
-            $this->_show_error("Mandatory model config value type needs to be bool.");
+            $this->_showError("Mandatory model config value type needs to be bool.");
             $this->_mandatoryModel = false;
         }
     }
