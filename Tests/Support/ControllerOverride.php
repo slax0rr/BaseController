@@ -2,9 +2,10 @@
 
 class ControllerOverride extends \SlaxWeb\BaseController\BaseController
 {
-    public function __construct()
+    public function __construct() { }
+
+    public function delayedConstruct()
     {
-        $this->models = false;
         parent::__construct();
     }
 

@@ -1,4 +1,6 @@
 <?php
+use SlaxWeb\Registry\Container as Registry;
+
 /**
  * Mock CI_Controller class
  */
@@ -11,10 +13,10 @@ class CI_Controller
 
     public function __construct()
     {
-        $this->load = new CI_Loader;
-        $this->config = new CI_Config;
-        $this->router = new CI_Router;
-        $this->input = new CI_Input;
+        $this->load = Registry::get("CI_Loader");
+        $this->config = Registry::get("CI_Config");
+        $this->router = Registry::get("CI_Router");
+        $this->input = Registry::get("CI_Input");
     }
 
     public function _404()
@@ -54,8 +56,22 @@ class CI_Loader
  */
 class CI_Config
 {
+    public $config = array(
+        "controller_class_case"     =>  0,
+        "enable_model_autoload"     =>  true,
+        "enable_view_autoload"      =>  true,
+        "enable_layout_autoload"    =>  false,
+        "enable_language_autoload"  =>  true,
+        "mandatory_model"           =>  false,
+        "default_view"              =>  "{controllerDirectory}/{controllerName}/{methodName}/main",
+        "mandatory_language"        =>  true
+    );
+
     public function __call($name, $params)
     {
+        if ($name === "item") {
+            return $this->config[$params[0]];
+        }
         return 1;
     }
 }

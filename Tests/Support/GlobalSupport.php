@@ -55,3 +55,20 @@ function file_exists($path)
 
     return $fileExists;
 }
+
+function log_message($level, $msg)
+{
+    global $helperOutput;
+
+    if ($helperOutput) {
+        echo "({$level}) $msg";
+    }
+}
+
+function show_error($msg, $code)
+{
+    global $helperOutput;
+    if ($helperOutput) {
+        echo "({$code}) $msg";
+    }
+}

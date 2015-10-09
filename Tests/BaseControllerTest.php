@@ -1,6 +1,8 @@
 <?php
 namespace SlaxWeb\BaseController;
 
+use SlaxWeb\Registry\Container as Registry;
+
 require_once("Support/TestSupport.php");
 require_once("Support/GlobalSupport.php");
 require_once("Support/ControllerOverride.php");
@@ -17,7 +19,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testRemapLanguage()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $this->expectOutputRegex("~testMethod~");
@@ -41,7 +43,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $helperOutput = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $this->expectOutputRegex("~show_404~");
@@ -63,7 +65,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $existing404 = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $this->expectOutputRegex("~custom_404~");
@@ -87,12 +89,13 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $helperOutput = true;
 
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $this->expectOutputRegex("~missingMethod_post~");
         $c->input->server["REQUEST_METHOD"] = "POST";
         $c->_remap("missingMethod");
+        $c->input->server["REQUEST_METHOD"] = "GET";
     }
 
     /*
@@ -105,7 +108,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testExistingMethodRemap()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $c->beforeMethod = array("beforeMethod");
@@ -136,7 +139,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testCrudRetrieve()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $c->TestController = $this->getMockBuilder("model")
@@ -190,7 +193,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testCrudDelete()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $c->afterDelete = "afterDeleteView";
@@ -249,7 +252,40 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     /*
      * Test Model Autoload
      *
-     * The model autoloader has to call "beforeModel", and "afterModel"
+     * Models have to be autoloaded if autoload is enabled in config, and if
+     * "models" property is not set to false.
+     */
+    public function testModelAutoload()
+    {
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_callback", "_loadModels"))
+            ->getMock();
+
+        $c->expects($this->exactly(2))
+            ->method("_loadModels");
+
+        $c->delayedConstruct();
+
+        $c->models = array("CustomModel1", "CustomModel2");
+        $c->delayedConstruct();
+
+        $conf = Registry::get("CI_Config");
+        $conf->config["enable_model_autoload"] = false;
+        $c->delayedConstruct();
+
+        $c->models = false;
+        $conf->config["enable_model_autoload"] = true;
+        $c->delayedConstruct();
+
+        $c->models = true;
+        $conf->config["enable_model_autoload"] = false;
+        $c->delayedConstruct();
+    }
+
+    /*
+     * Test Model Load
+     *
+     * The model loader has to call "beforeModel", and "afterModel"
      * callbacks at the beginning and the end of method execution.
      * It checks if "models" property has not been set to false, or not set
      * at all, if it is indeed set, it first tries to load the model that
@@ -257,13 +293,15 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
      * is an array, it itterates through it, and loads all defined models
      * in that array.
      */
-    public function testModelAutoload()
+    public function testModelLoad()
     {
+        define("APPPATH", "mockPath/");
+
         $c = $this->getMockBuilder("ControllerOverride")
             ->setMethods(array("_callback"))
             ->getMock();
+        $c->delayedConstruct();
 
-        define("APPPATH", "mockPath/");
         global $helperOutput;
         global $fileExists;
         $c->beforeModel = array("beforeModel");
@@ -274,10 +312,6 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             ->method("_callback")
             ->withConsecutive(
                 array($this->equalTo($c->beforeModel)),
-                array($this->equalTo($c->afterModel)),
-                array($this->equalTo($c->beforeModel)),
-                array($this->equalTo($c->afterModel)),
-                array($this->equalTo($c->beforeModel)),
                 array($this->equalTo($c->afterModel))
             );
 
@@ -285,14 +319,17 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array("model"))
             ->getMock();
 
-        $c->load->expects($this->exactly(5))
+        $c->load->expects($this->exactly(6))
             ->method("model")
             ->withConsecutive(
                 array($this->equalTo("TestController_model"), $this->equalTo("TestController")),
                 array($this->equalTo("CustomModel1_model"), $this->equalTo("CustomModel1")),
                 array($this->equalTo("CustomModel2_model"), $this->equalTo("CustomModel2")),
+
                 array($this->equalTo("CustomModel1_model"), $this->equalTo("CustomModel1")),
-                array($this->equalTo("CustomModel2_model"), $this->equalTo("CustomModel2"))
+                array($this->equalTo("CustomModel2_model"), $this->equalTo("CustomModel2")),
+
+                array($this->equalTo("TestController_model"), $this->equalTo("TestController"))
             );
 
         $this->expectOutputRegex("~mockPath/models/TestController_model.php$~");
@@ -305,8 +342,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $fileExists = false;
         $c->loadModels();
 
+        $helperOutput = false;
         $fileExists = true;
-        $c->models = false;
+        $c->models = true;
         $c->loadModels();
     }
 
@@ -320,8 +358,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testLoadViews()
     {
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
+        $c->delayedConstruct();
 
         $c->view = "testView";
         $c->layout = false;
@@ -372,8 +411,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetView()
     {
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
+        $c->delayedConstruct();
 
         $c->view = "";
         $c->layout = "testLayout";
@@ -410,8 +450,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetLanguage()
     {
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_callback", "_loadModels"))
+            ->setMethods(array("_callback", "_loadModels", "_loadConfig"))
             ->getMock();
+        $c->delayedConstruct();
 
         $c->view = "testView";
         $c->layout = "testLayout";
@@ -495,8 +536,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testSetSubview()
     {
         $c = $this->getMockBuilder("ControllerOverride")
-            ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
+        $c->delayedConstruct();
 
         $c->view = "testView";
         $c->layout = false;
@@ -574,7 +616,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     public function testCallback()
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_loadModels", "_loadConfig"))
             ->getMock();
 
         global $helperOutput;
@@ -598,7 +640,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     protected function _testCrud($method = "create")
     {
         $c = $this->getMockBuilder("\\SlaxWeb\\BaseController\\BaseController")
-            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels"))
+            ->setMethods(array("_loadLanguage", "_loadViews", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
 
         $ucMethod = ucfirst($method);
