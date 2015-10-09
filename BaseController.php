@@ -167,10 +167,10 @@ class BaseController extends \CI_Controller
     /**********
      * Config *
      **********/
-    protected $_autoModel;
-    protected $_mandatoryModel;
-    protected $_loadView;
-    protected $_defaultView;
+    protected $_autoModel = null;
+    protected $_mandatoryModel = null;
+    protected $_loadView = null;
+    protected $_defaultView = null;
 
     /**
      * Initiate the view loader class
