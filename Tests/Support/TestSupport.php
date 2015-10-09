@@ -4,7 +4,7 @@
  */
 class Registry
 {
-    protected static $_container = [];
+    protected static $_container = array();
 
     public static function get($class)
     {
