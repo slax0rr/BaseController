@@ -633,6 +633,67 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * Test Config Load
+     *
+     * On construction BaseController has to load the config values from the
+     * config file and set them to appropriate properties, as well as check
+     * if the config values are of correct type.
+     */
+    public function testConfigLoad()
+    {
+        global $helperOutput;
+        $helperOutput = false;
+
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_callback", "_loadConfig"))
+            ->getMock();
+
+        $c->expects($this->once())
+            ->method("_loadConfig");
+
+        $c->delayedConstruct();
+
+        $c = $this->getMockBuilder("ControllerOverride")
+            ->setMethods(array("_callback", "_showError"))
+            ->getMock();
+
+        $c->delayedConstruct();
+
+        $c->expects($this->exactly(2))
+            ->method("_showError")
+            ->withConsecutive(
+                array($this->equalTo("Model autoload config value needs to be bool.")),
+                array($this->equalTo("Mandatory model config value type needs to be bool."))
+            );
+
+        $conf = Registry::get("CI_Config");
+
+        $conf->config["enable_model_autoload"] = true;
+        $conf->config["mandatory_model"] = false;
+        $c->loadConfig();
+        $this->assertTrue($c->_autoModel);
+        $this->assertFalse($c->_mandatoryModel);
+
+        $conf->config["enable_model_autoload"] = false;
+        $conf->config["mandatory_model"] = true;
+        $c->loadConfig();
+        $this->assertFalse($c->_autoModel);
+        $this->assertTrue($c->_mandatoryModel);
+
+        $conf->config["enable_model_autoload"] = "test";
+        $conf->config["mandatory_model"] = true;
+        $c->loadConfig();
+        $this->assertTrue($c->_autoModel);
+        $this->assertTrue($c->_mandatoryModel);
+
+        $conf->config["enable_model_autoload"] = true;
+        $conf->config["mandatory_model"] = "test";
+        $c->loadConfig();
+        $this->assertTrue($c->_autoModel);
+        $this->assertFalse($c->_mandatoryModel);
+    }
+
+    /*
      * Helper for CRUD testing
      *
      * All crud methods are tested similarly, combine tests in one method.
