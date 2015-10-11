@@ -65,6 +65,12 @@ class BaseController extends \CI_Controller
      */
     public $language = "";
     /**
+     * Language loaded
+     *
+     * @var bool
+     */
+    private $__langLoaded = false;
+    /**
      * Language file prefix
      *
      * Include prefixed keys in view data. If no prefix is set,
@@ -373,7 +379,9 @@ class BaseController extends \CI_Controller
         }
 
         // Load language to view
-        $this->_setLanguage();
+        if ($this->__langLoaded === true) {
+            $this->_setLanguage();
+        }
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
@@ -444,18 +452,22 @@ class BaseController extends \CI_Controller
 
         // try to use controller name as language file name
         if ($this->_loadLang === true) {
-            if (file_exists(APPPATH . "language/{$this->language}/{$this->_class}_lang.php")) {
-                $this->lang->load($this->langFile, $this->language);
+            if (file_exists(APPPATH . "language/{$this->language}/{$this->_class}_lang.php") === true) {
+                $this->lang->load($this->_class, $this->language);
+                $this->__langLoaded = true;
             } elseif ($this->_mandatoryLang === true) {
                 $this->_showError("Mandatory controller language file was not found.", 404);
             }
         }
 
-        if (is_string($this->langFile) === true) {
+        // load languages files in "langFile" property
+        if (is_string($this->langFile) === true && $this->langFile !== "") {
             $this->lang->load($this->langFile, $this->language);
+            $this->__langLoaded = true;
         } elseif (is_array($this->langFile) === true) {
             foreach ($this->langFile as $lang) {
                 $this->lang->load($lang, $this->language);
+                $this->__langLoaded = true;
             }
         }
 

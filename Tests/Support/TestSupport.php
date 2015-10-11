@@ -76,10 +76,10 @@ class CI_Config
         "enable_model_autoload"     =>  true,
         "enable_view_autoload"      =>  true,
         "enable_layout_autoload"    =>  false,
-        "enable_language_autoload"  =>  true,
+        "enable_language_autoload"  =>  false,
         "mandatory_model"           =>  false,
         "default_view"              =>  "{controllerDirectory}{controllerName}/{methodName}/main",
-        "mandatory_language"        =>  true
+        "mandatory_language"        =>  false
     );
 
     public function __call($name, $params)

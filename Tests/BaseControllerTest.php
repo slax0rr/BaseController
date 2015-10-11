@@ -381,7 +381,6 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
 
         $c->view = "testView";
         $c->_loadLayout = false;
-        $c->langFile = false;
 
         $loader = $this->getMockBuilder("ViewLoader")
             ->setMethods(array("loadView"))
@@ -473,6 +472,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $c->delayedConstruct();
 
+        global $helperOutput;
+        global $fileExists;
+        $helperOutput = true;
         $c->view = "testView";
         $c->layout = "testLayout";
         $c->router->directory = "testDirectory/";
@@ -480,7 +482,7 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
         $c->afterLanguage = array("afterLanguage");
         $c->beforeMethod = array("beforeMethod");
         $c->afterMethod = array("afterMethod");
-        $c->langFile = true;
+        $c->_loadLang = true;
         $c->language = "lang";
 
         $c->expects($this->exactly(12))
@@ -530,19 +532,22 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
                 array("TestLanguage2", "lang")
             );
 
-        $this->expectOutputRegex("~testMethod~");
+        $this->expectOutputRegex("~fileExists: mockPath/language/lang/TestController_lang.php.*testMethod~");
+
         // test with default language file, and no additional prefixes
         $c->_remap("testMethod");
 
         // Test custom language file and custom language key prefix
         $c->langFile = "TestLang";
         $c->langPrefix = "testprefix_";
+        $c->_loadLang = false;
         $c->_remap("testMethod");
 
         // test multiple language files, and additional prefixes
-        $c->langFile = array("TestController", "TestLanguage1", "TestLanguage2");
+        $c->langFile = array("TestLanguage1", "TestLanguage2");
         $c->additionalPrefixes = array("prefix1_", "prefix2_");
         $c->langPrefix = "";
+        $c->_loadLang = true;
         $c->_remap("testMethod");
     }
 
