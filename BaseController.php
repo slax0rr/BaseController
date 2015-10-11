@@ -593,6 +593,10 @@ class BaseController extends \CI_Controller
             $this->_showError("Mandatory language config value needs to be bool");
             $this->_mandatoryLang = true;
         }
+        // set default language if not yet set
+        if ($this->language === "") {
+            $this->language = $this->config->item("language");
+        }
     }
 
     /**
