@@ -79,7 +79,8 @@ class CI_Config
         "enable_language_autoload"  =>  false,
         "mandatory_model"           =>  false,
         "default_view"              =>  "{controllerDirectory}{controllerName}/{methodName}/main",
-        "mandatory_language"        =>  false
+        "mandatory_language"        =>  false,
+        "language"                  =>  "defaultLang"
     );
 
     public function __call($name, $params)

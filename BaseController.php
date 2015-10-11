@@ -46,7 +46,7 @@ class BaseController extends \CI_Controller
      *
      * @var mixed
      */
-    public $layout = false;
+    public $layout = "";
     /**
      * Language file
      *
@@ -392,7 +392,7 @@ class BaseController extends \CI_Controller
         $data["mainView"] = $this->_viewLoader->loadView($this->view, $this->viewData, true, true);
 
         // If layout set to true, guess the default name of the layout
-        if ($this->layout === true) {
+        if ($this->_loadLayout === true && $this->layout === "") {
             $this->_setLayout();
         }
 

@@ -374,6 +374,9 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadViews()
     {
+        if (defined("VIEWPATH") === false) {
+            define("VIEWPATH", "viewPath/");
+        }
         $c = $this->getMockBuilder("ControllerOverride")
             ->setMethods(array("_loadLanguage", "_callback", "_loadModels", "_loadConfig"))
             ->getMock();
@@ -427,11 +430,14 @@ class BaseControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetView()
     {
+        if (defined("VIEWPATH") === false) {
+            define("VIEWPATH", "viewPath/");
+        }
         $c = $this->getMockBuilder("ControllerOverride")
             ->setMethods(array("_loadLanguage", "_callback", "_loadModels"))
             ->getMock();
         $c->delayedConstruct();
-
+ 
         $c->view = "";
         $c->_loadLayout = true;
         $c->layout = "testLayout";
