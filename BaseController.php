@@ -55,7 +55,7 @@ class BaseController extends \CI_Controller
      *
      * @var mixed
      */
-    public $langFile = true;
+    public $langFile = "";
     /**
      * Language
      *
@@ -170,6 +170,8 @@ class BaseController extends \CI_Controller
     protected $_loadView = null;
     protected $_defaultView = null;
     protected $_loadLayout = null;
+    protected $_loadLang = null;
+    protected $_mandatoryLang = null;
 
     /**
      * Initiate the view loader class
@@ -370,10 +372,8 @@ class BaseController extends \CI_Controller
             $this->_setView();
         }
 
-        // Load language
-        if ($this->langFile !== false) {
-            $this->_setLanguage();
-        }
+        // Load language to view
+        $this->_setLanguage();
 
         // Load the sub-views
         if (empty($this->subViews) === false) {
@@ -444,8 +444,12 @@ class BaseController extends \CI_Controller
         $this->_callback($this->beforeLanguage);
 
         // try to use controller name as language file name
-        if ($this->langFile === true) {
-            $this->langFile = $this->_class;
+        if ($this->_loadLang === true) {
+            if (file_exists(APPPATH . "language/{$this->language}/{$this->_class}_lang.php")) {
+                $this->lang->load($this->langFile, $this->language);
+            } elseif ($this->_mandatoryLang === true) {
+                $this->_showError("Mandatory controller language file was not found.", 404);
+            }
         }
 
         if (is_string($this->langFile) === true) {
@@ -561,6 +565,22 @@ class BaseController extends \CI_Controller
         if (is_bool($this->_loadLayout) === false) {
             $this->_showError("Layout autoload config value needs to be bool.");
             $this->_loadLayout = true;
+        }
+
+        // set language config values
+        if ($this->_loadLang === null) {
+            $this->_loadLang = $this->config->item("enable_language_autoload");
+        }
+        if (is_bool($this->_loadLang) === false) {
+            $this->_showError("Lang autoload config value needs bo be bool.");
+            $this->_loadLang = true;
+        }
+        if ($this->_mandatoryLang === null) {
+            $this->_mandatoryLang = $this->config->item("mandatory_language");
+        }
+        if (is_bool($this->_mandatoryLang) === false) {
+            $this->_showError("Mandatory language config value needs to be bool");
+            $this->_mandatoryLang = true;
         }
     }
 
