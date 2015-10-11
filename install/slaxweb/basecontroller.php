@@ -39,6 +39,10 @@ $config["enable_layout_autoload"] = false;
 /**
  * Automatically load language file in every controller
  *
+ * This affects only the default controller language file. If you have set
+ * one or more language files in the "langFile" property, those languages
+ * will be loaded, regardless of this setting.
+ *
  * Available values: true/false
  */
 $config["enable_language_autoload"] = true;
