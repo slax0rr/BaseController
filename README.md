@@ -394,6 +394,11 @@ If those are set, you will get this error message in your view data. On validati
 ChangeLog
 =========
 
+0.4.1
+-----
+
+* Fix loading view data into subview when subview data not set
+
 0.4.0
 -----
 
