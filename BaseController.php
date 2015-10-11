@@ -403,7 +403,6 @@ class BaseController extends \CI_Controller
      */
     protected function _setView()
     {
-        var_dump($this->_defaultView);
         $view = str_replace("{controllerDirectory}", $this->router->fetch_directory(), $this->_defaultView);
         $view = str_replace("{controllerName}", $this->_class, $view);
         $view = str_replace("{methodName}", $this->_method, $view);
