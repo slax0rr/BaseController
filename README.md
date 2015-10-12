@@ -48,14 +48,19 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basecontroller": "~0.3"
+    "slaxweb/ci-basecontroller": "~1.0"
+  },
+  "scripts": {
+      "post-install-cmd": [
+          "sh vendor/slaxweb/ci-basecontroller/SlaxWeb/BaseController/install/install.sh"
+      ]
   }
 }
 ```
 
 Then run **composer.phar install**. When finished, enable composer autoload in *application/config/config.php*.
 
-Next create the directory in *application/config/* called *slaxweb*, and copy the configuration file found in *install/slaxweb/basecontroller.php* to the newly created directory. Or use the installation script found in *install* directory.
+If you do not define the install script in your *composer.json* then you have to copy the config file manually. Create the directory in *application/config/* called *slaxweb*, and copy the configuration file found in *install/slaxweb/basecontroller.php* to the newly created directory.
 
 Congratulations, BaseController is installed.
 
