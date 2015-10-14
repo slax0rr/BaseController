@@ -101,7 +101,7 @@ class Contrlr extends \SlaxWeb\BaseController\BaseController
 Basic usage
 -----------
 
-To start using, all your controllers must extend **\SlaxWeb\BaseController\BaseController** instead of CI_Controller. If you are already extending MY_Controller, then extend **\SlaxWeb\BaseController\BaseController** in MY_Controller.
+To start using BaseController, all your controllers must extend **\SlaxWeb\BaseController\BaseController** instead of CI_Controller. If you are already extending MY_Controller, then extend **\SlaxWeb\BaseController\BaseController** in MY_Controller.
 
 And this is it, after a controller method is done executing, BaseController will automatically load the view file associated with this controller method. The default view being loaded is: *application/views/(controllerdir)/controllername/controllermethod/main*.
 
@@ -110,13 +110,13 @@ Disable view loading
 
 Some controller methods do not load views. In this case set BaseController property **view** to false:
 ```PHP
-$this->view = false
+$this->view = false;
 ```
 
 Change view file
 ----------------
 
-Want to load a different view file and not the default one? No problem, just set the desired view file to **view** property.
+Want to load a different view file and not the default one? No problem, just set the desired view file to the **view** property.
 ```PHP
 $this->view = "desired/view";
 ```
@@ -124,9 +124,9 @@ $this->view = "desired/view";
 Load sub-views
 --------------
 
-WARNING! Loading of subview has been changed in version 0.4.0. Please see **UPDATE0.4.0.md** for more information.
+WARNING! Loading of subviews has been changed in version 0.4.0. Please see **UPDATE0.4.0.md** for more information.
 
-If you need to load subviews into your main view, you can do so, by assigning a nested array to the BaseController **subViews** property. First level array holds the name of the sub-view parameter injected into view data, as the key. The value is an array of arrays. The bottom most array holds the view path and name, and any subview specific data with the key names, "view" and "data" respectively.
+If you need to load subviews into your main view, you can do so by assigning a nested array to the BaseController **subViews** property. First level array holds the name of the sub-view parameter injected into view data, as the key. The value is an array of arrays. The bottom most array holds the view path and name, and any subview specific data with the key names, "view" and "data" respectively.
 ```PHP
 $this->subViews = array(
     "name"  =>  array(
@@ -140,7 +140,7 @@ $this->subViews = array(
 );
 ```
 
-Data is not a required paraeter and can be ommited.
+Data is not a required parameter and can be omitted.
 
 Display the subview in the main view:
 ```PHP
@@ -150,7 +150,7 @@ Display the subview in the main view:
 View data
 ---------
 
-To load data into view, simply assign it to the **viewData** property array.
+To load data into a view, simply assign it to the **viewData** property array.
 ```PHP
 $this->viewData = array("name" => "value");
 ```
@@ -158,7 +158,7 @@ $this->viewData = array("name" => "value");
 Controller 404 page
 -------------------
 
-If a controller method is not found, the Basecontroller will search in the routed-to controller a *_404* method and call it, so you can have custom 404 pages per controller. If it is not found, it will call the CodeIgniters *show_404* method, and the CodeIgniter 404 page will be displayed as per normal operation.
+If a controller method is not found, the Basecontroller will search in the routed-to controller a *_404* method and call it, so you can have custom 404 pages per controller. If it is not found, BaseController will call CodeIgniters *show_404* method, and the CodeIgniter 404 page will be displayed as per normal operation.
 
 Languages
 =========
@@ -201,7 +201,7 @@ class Contrlr extend \SlaxWeb\BaseController\BaseController
 Basic usage
 -----------
 
-By default, base controller will auto-load the language file that has the same name as the controller name, from the default language directory. By default that is english, changeable in CodeIgniter config. By default it will load all language strings which have the *methodname_* as the prefix in the language string key name.
+By default, BaseController will auto-load the language file from the default language directory that has the same name as the controller name. By default that is english, but it's changeable in CodeIgniter config. By default it will load all language strings which have the *methodname_* as the prefix in the language string key name.
 ```PHP
 class Contrlr \SlaxWeb\BaseController\BaseController
 {
@@ -283,7 +283,7 @@ class Contrlr extends \SlaxWeb\BaseController\BaseController
   public function layout()
   {
     // to load a layout, set layout property to true
-    // base controller will try to load the controllers layout if not found
+    // BaseController will try to load the controllers layout. If not found,
     // it will load the application default layout
     $this->layout = true;
   }
@@ -291,7 +291,7 @@ class Contrlr extends \SlaxWeb\BaseController\BaseController
   public function specificLayout()
   {
     // if you want your method or whole controller to have a specific
-layout file you can set it to the layout property
+    // layout file you can set it to the layout property
     $this->layout = "layout/view";
   }
 }
@@ -325,7 +325,7 @@ options:
 * Controller specific layout, set property **layout** to true,
   BaseController will try to load the default controller layout file from {views}/layouts/ControllerDir/ControllerName/layout
 * Application specific layout, set property **layout** to true, and make
-  sure controller specific layout view file does not exists
+  sure that controller specific layout view file does not exist
 * Custom layout, set the path to the layout view file to the **layout**
   property
 ```PHP
@@ -343,7 +343,7 @@ BasicController also allows you to manually load any view file you want. Because
 Models
 ======
 
-BaseController now tries to auto-load the default model for this controller, which needs to have the same name as the controller it self, with the *_model* suffix. You can also add additional models you may want to load to the **models** property. Models are then accessible as $this->{Model name}, without the *_model* suffix.
+BaseController tries to auto-load the default model for this controller, which needs to have the same name as the controller itself, with the *_model* suffix. You can also add additional models you want to load to the **models** property. Models are then accessible as $this->{Model name}, without the *_model* suffix.
 
 Example
 -------
@@ -366,7 +366,7 @@ class Cntrlr extends \SlaxWeb\BaseController\BaseController
 CRUD
 ====
 
-CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods that retrieve data, inject them into the view data as well as take post data for creation, update and deletion of database data. As long as your models provides the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
+CRUD stands for Create, Retrieve, Update, Delete. BaseController provides basic CRUD methods that retrieve data, inject them into the view data as well as take post data for creation, update and deletion of database data. As long as your models provide the necessary methods for such operations. To be on the safe side, install the [BaseModel](https://github.com/slax0rr/BaseModel), and extend your model from it.
 
 There are 4 methods for CRUD:
 * index - fetches the data from the database and injects the BaseModel Result object into view data as **_tableData** variable
@@ -374,16 +374,16 @@ There are 4 methods for CRUD:
 * create_post - takes the post data and inserts it into the Table
 * delete_post - takes the ID as input parameter and deletes the record. If ID is int(0) it deletes all records in the table
 
-All but index(Create) are accessed through POST HTTP request method, and also all 3 provide a means to load a specific view after they have completed, and also set an error in view data if the operation was not successful. This is done through 3 different BaseController properties:
+All but index(Create) are accessed through POST HTTP request method, and also all three provide the means to load a specific view after they have completed, and also set an error in view data if the operation was not successful. This is done through three different BaseController properties:
 * afterUpdate
 * afterCreate
 * afterDelete
 
 Those need to contain the string location of the view to be loaded. If left empty, the respective default view will be loaded as per methods HTTP GET request counterpart (update, create, delete).
 
-Update and Create also provide a means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
+Update and Create also provide the means for data validation, all you need to do is set a *createRules* or *updateRules* public properties in your controller. Those need to contain the normal CodeIgniter validation rules.
 
-On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are 3 types of errors: validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain following keys:
+On error, Create, Update and Delete will inject the error strings as *createError*, *updateError* or *deleteError* variables. There are three types of errors: validation error, create error and update error, as well as a fourth, generic error for delete method. In order to get the message, your controller language file has to be loaded and it needs to contain following keys:
 * error_validation_error - for when validation error occurs
 * error_update_error - for when an update error occurs
 * error_create_error - for when a create error occurs
