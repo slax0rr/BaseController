@@ -13,6 +13,7 @@ Table of contents
 =================
 * [BaseController](https://github.com/slax0rr/BaseController/blob/master/README.md#basecontroller)
 * [Table of contents](https://github.com/slax0rr/BaseController/blob/master/README.md#table-of-contents)
+* [Supported PHP versions](https://github.com/slax0rr/BaseController/blob/master/README.md#supported-php-versions)
 * [Install](https://github.com/slax0rr/BaseController/blob/master/README.md#install)
 * [View loading and data](https://github.com/slax0rr/BaseController/blob/master/README.md#view-loading-and-data)
   * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example)
@@ -39,6 +40,17 @@ Table of contents
   * [Example](https://github.com/slax0rr/BaseController/blob/master/README.md#example-3)
 * [CRUD](https://github.com/slax0rr/BaseController/blob/master/README.md#crud)
 * [ChangeLog](https://github.com/slax0rr/BaseController/blob/master/README.md#changelog)
+
+Supported PHP versions
+======================
+
+The Base model runs on the following PHP versions:
+* 7.0
+* 5.6
+* 5.5
+* 5.4
+* 5.3
+* hhvm
 
 Install
 =======
