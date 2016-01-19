@@ -18,14 +18,13 @@
         "mockery/mockery": "~0.9"
     },
 	"autoload":	{
-		"psr-0": {
-			"SlaxWeb\\BaseController": ""
+		"psr-4": {
+			"SlaxWeb\\BaseController": "src/"
 		}
 	},
     "extra": {
         "branch-alias": {
             "dev-develop": "0.5.x-dev"
         }
-    },
-    "target-dir": "SlaxWeb/BaseController"
+    }
 }
