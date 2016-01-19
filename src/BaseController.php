@@ -18,12 +18,14 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $view = "";
+
     /**
      * View data
      *
      * @var array
      */
     public $viewData = array();
+
     /**
      * SubViews
      *
@@ -36,6 +38,7 @@ class BaseController extends \CI_Controller
      * @var array
      */
     public $subViews = array();
+
     /**
      * Layout
      *
@@ -47,6 +50,7 @@ class BaseController extends \CI_Controller
      * @var mixed
      */
     public $layout = "";
+
     /**
      * Language file
      *
@@ -56,6 +60,7 @@ class BaseController extends \CI_Controller
      * @var mixed
      */
     public $langFile = "";
+
     /**
      * Language
      *
@@ -64,12 +69,14 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $language = "";
+
     /**
      * Language loaded
      *
      * @var bool
      */
     private $__langLoaded = false;
+
     /**
      * Language file prefix
      *
@@ -79,6 +86,7 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $langPrefix = "";
+
     /**
      * Additional language prefix
      *
@@ -87,6 +95,7 @@ class BaseController extends \CI_Controller
      * @var array
      */
     public $additionalPrefixes = array();
+
     /**
      * Models
      *
@@ -97,18 +106,21 @@ class BaseController extends \CI_Controller
      * @var mixed
      */
     public $models = true;
+
     /**
      * Controller class
      *
      * @var string
      */
     protected $_class = "";
+
     /**
      * Controller method
      *
      * @var string
      */
     protected $_method = "";
+
     /**
      * View Loader object
      *
@@ -125,6 +137,7 @@ class BaseController extends \CI_Controller
      * @var array
      */
     public $createRules = array();
+
     /**
      * View for after Create
      *
@@ -133,12 +146,14 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $afterCreate = "";
+
     /**
      * Update part of CRUD validation rules
      *
      * @var array
      */
     public $updateRules = array();
+
     /**
      * View for after Update
      *
@@ -147,6 +162,7 @@ class BaseController extends \CI_Controller
      * @var string
      */
     public $afterUpdate = "";
+
     /**
      * View for after Delete
      *
