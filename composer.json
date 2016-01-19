@@ -19,7 +19,7 @@
     },
 	"autoload":	{
 		"psr-4": {
-			"SlaxWeb\\BaseController": "src/"
+			"SlaxWeb\\BaseController\\": "src/"
 		}
 	},
     "extra": {

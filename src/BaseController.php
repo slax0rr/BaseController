@@ -62,15 +62,6 @@ class BaseController extends \CI_Controller
     public $langFile = "";
 
     /**
-     * Language
-     *
-     * Use default language if not set
-     *
-     * @var string
-     */
-    public $language = "";
-
-    /**
      * Language loaded
      *
      * @var bool
@@ -128,6 +119,13 @@ class BaseController extends \CI_Controller
      */
     protected $_viewLoader = null;
 
+    /**
+     * Config Loader
+     *
+     * @var \SlaxWeb\BaseController\Config\Loader
+     */
+    protected $_config = null;
+
     /*************************
      * Basic CRUD properties *
      *************************/
@@ -184,24 +182,13 @@ class BaseController extends \CI_Controller
     public $beforeModel = array();
     public $afterModel = array();
 
-    /**********
-     * Config *
-     **********/
-    protected $_autoModel = null;
-    protected $_mandatoryModel = null;
-    protected $_loadView = null;
-    protected $_defaultView = null;
-    protected $_loadLayout = null;
-    protected $_loadLang = null;
-    protected $_mandatoryLang = null;
-
     /**
      * Initiate the view loader class
      */
     public function __construct()
     {
         parent::__construct();
-        $this->_loadConfig();
+        $this->_config = new Config\Loader($this);
         switch ($this->config->item("controller_class_case")) {
             case 0:
                 $this->_class = $this->router->fetch_class();
@@ -218,7 +205,7 @@ class BaseController extends \CI_Controller
         }
 
         $this->_viewLoader = new \SlaxWeb\ViewLoader\Loader($this);
-        if ($this->_autoModel === true && $this->models !== false) {
+        if ($this->this->_config->autoModel === true && $this->models !== false) {
             $this->_loadModels();
         }
     }
@@ -232,7 +219,7 @@ class BaseController extends \CI_Controller
      */
     public function _remap($method, $params = array())
     {
-        $this->_loadLanguage();
+        $this->_config->loadLanguage();
         $method .= ($this->input->server("REQUEST_METHOD") === "POST") ? "_post" : "";
         if (method_exists($this, $method)) {
             $this->_method = $this->router->fetch_method();
@@ -243,11 +230,11 @@ class BaseController extends \CI_Controller
 
             $this->_callback($this->afterMethod);
 
-            $this->_loadViews();
+            $this->_config->loadViews();
         } elseif (method_exists($this, "_404")) {
             $this->_method = "_404";
             call_user_func(array($this, "_404"));
-            $this->_loadViews();
+            $this->_config->loadViews();
         } else {
             show_404();
         }
@@ -364,7 +351,7 @@ class BaseController extends \CI_Controller
         $model = ucfirst("{$this->_class}_model");
         if (file_exists(APPPATH . "models/{$model}.php")) {
             $this->load->model($model, $this->_class);
-        } elseif ($this->_mandatoryModel === true) {
+        } elseif ($this->_config->mandatoryModel === true) {
             $this->_showError("Model ({$model}) does not exist.", 404);
         }
 
@@ -385,7 +372,7 @@ class BaseController extends \CI_Controller
     protected function _loadViews()
     {
         // should we load the views?
-        if ($this->_loadView === false) {
+        if ($this->_config->loadView === false) {
             return true;
         }
 
@@ -408,12 +395,12 @@ class BaseController extends \CI_Controller
         $data["mainView"] = $this->_viewLoader->loadView($this->view, $this->viewData, true, true);
 
         // If layout set to true, guess the default name of the layout
-        if ($this->_loadLayout === true && $this->layout === "") {
+        if ($this->_config->loadLayout === true && $this->layout === "") {
             $this->_setLayout();
         }
 
         // If there is no layout, set everything loaded to this point to output
-        if ($this->_loadLayout === false) {
+        if ($this->_config->loadLayout === false) {
             $this->output->set_output($data["mainView"]);
         } else {
             // Load the layout
@@ -427,7 +414,7 @@ class BaseController extends \CI_Controller
      */
     protected function _setView()
     {
-        $view = str_replace("{controllerDirectory}", $this->router->fetch_directory(), $this->_defaultView);
+        $view = str_replace("{controllerDirectory}", $this->router->fetch_directory(), $this->_config->defaultView);
         $view = str_replace("{controllerName}", $this->_class, $view);
         $view = str_replace("{methodName}", $this->_method, $view);
         $this->view = strtolower($view);
@@ -467,22 +454,22 @@ class BaseController extends \CI_Controller
         $this->_callback($this->beforeLanguage);
 
         // try to use controller name as language file name
-        if ($this->_loadLang === true) {
-            if (file_exists(APPPATH . "language/{$this->language}/{$this->_class}_lang.php") === true) {
-                $this->lang->load($this->_class, $this->language);
+        if ($this->_config->loadLang === true) {
+            if (file_exists(APPPATH . "language/{$this->_config->language}/{$this->_class}_lang.php") === true) {
+                $this->lang->load($this->_class, $this->_config->language);
                 $this->__langLoaded = true;
-            } elseif ($this->_mandatoryLang === true) {
+            } elseif ($this->_config->mandatoryLang === true) {
                 $this->_showError("Mandatory controller language file was not found.", 404);
             }
         }
 
         // load languages files in "langFile" property
         if (is_string($this->langFile) === true && $this->langFile !== "") {
-            $this->lang->load($this->langFile, $this->language);
+            $this->lang->load($this->langFile, $this->_config->language);
             $this->__langLoaded = true;
         } elseif (is_array($this->langFile) === true) {
             foreach ($this->langFile as $lang) {
-                $this->lang->load($lang, $this->language);
+                $this->lang->load($lang, $this->_config->language);
                 $this->__langLoaded = true;
             }
         }
@@ -541,77 +528,6 @@ class BaseController extends \CI_Controller
             if (method_exists($c[0], $c[1])) {
                 call_user_func($c);
             }
-        }
-    }
-
-    /**
-     * Load config
-     *
-     * Load the configuration and set its values to protected properties.
-     */
-    protected function _loadConfig()
-    {
-        // load the config file
-        $this->load->config("slaxweb/basecontroller");
-
-        // set model config values
-        if ($this->_autoModel === null) {
-            $this->_autoModel = $this->config->item("enable_model_autoload");
-        }
-        if (is_bool($this->_autoModel) === false) {
-            $this->_showError("Model autoload config value needs to be bool.");
-            $this->_autoModel = true;
-        }
-        if ($this->_mandatoryModel === null) {
-            $this->_mandatoryModel = $this->config->item("mandatory_model");
-        }
-        if (is_bool($this->_mandatoryModel) === false) {
-            $this->_showError("Mandatory model config value type needs to be bool.");
-            $this->_mandatoryModel = false;
-        }
-
-        // set view config values
-        if ($this->_loadView === null) {
-            $this->_loadView = $this->config->item("enable_view_autoload");
-        }
-        if (is_bool($this->_loadView) === false) {
-            $this->_showError("View autoload config value needs to be bool.");
-            $this->_loadView = true;
-        }
-        if ($this->_defaultView === null) {
-            $this->_defaultView = $this->config->item("default_view");
-        }
-        if (empty($this->_defaultView)) {
-            $this->_defaultView = "{controllerDirectory}{controllerName}/{methodName}/main";
-        }
-
-        // set layout config values
-        if ($this->_loadLayout === null) {
-            $this->_loadLayout = $this->config->item("enable_layout_autoload");
-        }
-        if (is_bool($this->_loadLayout) === false) {
-            $this->_showError("Layout autoload config value needs to be bool.");
-            $this->_loadLayout = true;
-        }
-
-        // set language config values
-        if ($this->_loadLang === null) {
-            $this->_loadLang = $this->config->item("enable_language_autoload");
-        }
-        if (is_bool($this->_loadLang) === false) {
-            $this->_showError("Lang autoload config value needs bo be bool.");
-            $this->_loadLang = true;
-        }
-        if ($this->_mandatoryLang === null) {
-            $this->_mandatoryLang = $this->config->item("mandatory_language");
-        }
-        if (is_bool($this->_mandatoryLang) === false) {
-            $this->_showError("Mandatory language config value needs to be bool");
-            $this->_mandatoryLang = true;
-        }
-        // set default language if not yet set
-        if ($this->language === "") {
-            $this->language = $this->config->item("language");
         }
     }
 
