@@ -68,6 +68,7 @@ $config["mandatory_model"] = false;
  *
  * Path variables:
  * - {controllerDirectory} - replaced by the sub-directory the controller is in
+ *                           (!)contains trailing slash(!)
  * - {controllerName} - replaced by the current controller name
  * - {methodName} - replaced by the current method name
  * 
